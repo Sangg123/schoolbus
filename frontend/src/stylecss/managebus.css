@@ -1,0 +1,33 @@
+.managebus-container {
+  padding: 20px;
+}
+
+.managebus-container h2 {
+  color: #0078ff;
+  margin-bottom: 16px;
+}
+
+.managebus-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.managebus-container th,
+.managebus-container td {
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  text-align: left;
+}
+
+.managebus-container th {
+  background: #f0f8ff;
+  color: #0078ff;
+}
+
+.managebus-container tr:hover {
+  background: #f9fcff;
+}

@@ -1,0 +1,25 @@
+.sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid #e4e9f2;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-item {
+  padding: 12px 20px;
+  font-weight: 500;
+  color: #444;
+  border-left: 4px solid transparent;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.sidebar-item:hover {
+  background: #f0f8ff;
+  border-left-color: #0078ff;
+  color: #0078ff;
+}
