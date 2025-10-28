@@ -1,0 +1,137 @@
+Table User {
+  id serial [pk]
+  email varchar(255) [unique, not null]
+  password_hash varchar(255) [not null]
+  full_name varchar(255) [not null]
+  phone varchar(20) [unique]
+  role varchar(10) [not null, note: 'User role: admin, driver, parent']
+}
+
+Table Admin {
+  id serial [pk]
+  user_id int [unique, not null, ref: > User.id]
+}
+
+Table Driver {
+  id serial [pk]
+  user_id int [unique, not null, ref: > User.id]
+  citizen_id varchar(50) [unique, not null, note: 'National ID / Identity card']
+  license_id varchar(50) [unique, not null, note: 'Driver license number']
+}
+
+Table Parent {
+  id serial [pk]
+  user_id int [unique, not null, ref: > User.id]
+  citizen_id varchar(50) [unique, not null, note: 'National ID / Identity card']
+}
+
+Table Student {
+  id serial [pk]
+  full_name varchar(255) [not null]
+  class varchar(50)
+  student_code varchar(50) [unique, not null, note: 'Unique student code']
+}
+
+Table ParentStudent {
+  parent_id int [not null, ref: > Parent.id]
+  student_id int [not null, ref: > Student.id]
+  indexes {
+    (parent_id, student_id) [pk]
+  }
+}
+
+Table Bus {
+  id serial [pk]
+  license_plate varchar(20) [unique, not null]
+  capacity int
+  current_lat decimal(10,8)
+  current_lng decimal(11,8)
+  last_updated timestamptz [note: 'Timestamp of last location update']
+}
+
+Table Route {
+  id serial [pk]
+  name varchar(255) [unique, not null]
+  description text
+}
+
+Table StopPoint {
+  id serial [pk]
+  name varchar(255) [not null]
+  address text
+  latitude decimal(10,8) [not null]
+  longitude decimal(11,8) [not null]
+}
+
+Table Itinerary {
+  id serial [pk]
+  route_id int [not null, ref: > Route.id]
+  stop_id int [not null, ref: > StopPoint.id]
+  stop_order int [not null, note: 'Stop sequence on route (1, 2, 3...)']
+  estimated_time time [note: 'Estimated arrival time at stop']
+  indexes {
+    (route_id, stop_order) [unique]
+  }
+}
+
+Table Schedule {
+  id serial [pk]
+  route_id int [not null, ref: > Route.id]
+  bus_id int [not null, ref: > Bus.id]
+  driver_id int [not null, ref: > Driver.id]
+  day_of_week int [not null, note: 'Day of week (0=Mon ... 6=Sun)']
+  trip_type varchar(10) [not null, note: 'pickup / dropoff']
+  start_time time [not null]
+  indexes {
+    (route_id, day_of_week, trip_type) [unique]
+  }
+}
+
+Table StudentSchedule {
+  id serial [pk]
+  student_id int [not null, ref: > Student.id]
+  schedule_id int [not null, ref: > Schedule.id]
+  pickup_stop_id int [ref: > StopPoint.id, note: 'Pickup stop']
+  dropoff_stop_id int [ref: > StopPoint.id, note: 'Drop-off stop']
+  indexes {
+    (student_id, schedule_id) [unique]
+  }
+}
+
+Table Trip {
+  id serial [pk]
+  schedule_id int [not null, ref: > Schedule.id]
+  trip_date date [not null]
+  current_status varchar(20) [not null, default: 'pending', note: 'pending, in_progress, completed, cancelled']
+  initial_status_time timestamptz
+  final_status_time timestamptz
+  actual_start_time timestamptz
+  actual_end_time timestamptz
+  initial_snapshot jsonb [note: 'Frozen snapshot of Schedule/Bus/Driver/Route/Students']
+  final_snapshot jsonb [note: 'Final summary when trip ends']
+  indexes {
+    (schedule_id, trip_date) [unique]
+  }
+}
+
+Table Attendance {
+  id serial [pk]
+  trip_id int [not null, ref: > Trip.id]
+  student_id int [not null, ref: > Student.id]
+  stop_id int [not null, ref: > StopPoint.id]
+  action varchar(20) [not null, note: 'picked_up, dropped_off, absent']
+  timestamp timestamptz
+  indexes {
+    (trip_id, student_id) [unique]
+  }
+}
+
+Table Notification {
+  id serial [pk]
+  sender_id int [ref: > User.id]
+  receiver_id int [not null, ref: > User.id]
+  content text [not null]
+  type varchar(20) [not null, note: 'warning, info, delay, arrival']
+  is_read boolean
+  sent_time timestamptz
+}
