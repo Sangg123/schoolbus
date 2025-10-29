@@ -6,7 +6,7 @@ import MapComponent from "../components/mapcomponent";
 function ManageBus() {
   return (
     <div className="managebus-container">
-      <h2>Quản lý tuyến đường</h2>
+      <h2>Theo Dõi Vị Trí Xe</h2>
       <MapComponent />
     </div>
   );
