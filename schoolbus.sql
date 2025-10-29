@@ -170,6 +170,24 @@ COMMENT ON COLUMN "Trip"."initial_snapshot" IS 'Frozen snapshot of Schedule/Bus/
 COMMENT ON COLUMN "Trip"."final_snapshot" IS 'Final summary snapshot when trip ends (e.g. attendance, duration, alerts)';
 
 -- ==========================================
+-- TABLE: LOCATION_EVENT (GPS History)
+-- ==========================================
+CREATE TABLE "LocationEvent" (
+  "id" SERIAL PRIMARY KEY,
+  "trip_id" INT REFERENCES "Trip"("id") ON DELETE SET NULL,
+  "bus_id" INT NOT NULL REFERENCES "Bus"("id") ON DELETE CASCADE,
+  "timestamp" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  "latitude" DECIMAL(10, 8) NOT NULL,
+  "longitude" DECIMAL(11, 8) NOT NULL,
+  "speed_kph" FLOAT,
+  "heading" FLOAT,
+  "source" VARCHAR(20) DEFAULT 'device' CHECK ("source" IN ('device', 'gateway'))
+);
+COMMENT ON TABLE "LocationEvent" IS 'Stores historical GPS data for buses during trips';
+COMMENT ON COLUMN "LocationEvent"."timestamp" IS 'Time of GPS reading';
+COMMENT ON COLUMN "LocationEvent"."source" IS 'Data source: device (mobile) or gateway (external)';
+
+-- ==========================================
 -- TABLE: ATTENDANCE
 -- ==========================================
 CREATE TABLE "Attendance" (

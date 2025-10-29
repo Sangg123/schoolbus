@@ -114,6 +114,21 @@ Table Trip {
   }
 }
 
+Table LocationEvent {
+  id serial [pk]
+  trip_id int [ref: > Trip.id, note: 'Nullable if not tied to a trip']
+  bus_id int [ref: > Bus.id]
+  timestamp timestamp [not null, default: `now()`]
+  latitude decimal(10,8) [not null]
+  longitude decimal(11,8) [not null]
+  speed_kph float
+  heading float
+  source varchar(20) [default: 'device', note: 'device or gateway']
+  
+  Note: 'Stores historical GPS data for buses during trips'
+}
+
+
 Table Attendance {
   id serial [pk]
   trip_id int [not null, ref: > Trip.id]
