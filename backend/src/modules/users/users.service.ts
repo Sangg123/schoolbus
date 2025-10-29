@@ -1,11 +1,18 @@
-import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { UsersRepository } from './users.repository';
+import { Pageable } from 'src/core/interfaces';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PaginatedQueryUserDto } from './dto/paginated-query-user.dto';
+import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
-import { QueryUserDto } from './dto/query-user.dto';
-import { User, Prisma } from '../../../generated/prisma';
+import { UsersRepository } from './users.repository';
+import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -31,17 +38,21 @@ export class UsersService {
     return UserResponseDto.fromUser(user);
   }
 
-  async findAll(): Promise<UserResponseDto[]> {
-    const users = await this.usersRepository.findAll();
+  async findAll(query: QueryUserDto): Promise<UserResponseDto[]> {
+    const filter = this.buildFilter(query);
+    const users = await this.usersRepository.findByFilter(filter);
     return users.map(UserResponseDto.fromUser);
   }
 
-  async findAllWithPagination(query: QueryUserDto) {
-    const { page, limit, sortBy, sortOrder, ...filter } = query;
+  async findAllWithPagination(
+    query: PaginatedQueryUserDto,
+  ): Promise<PageableUserResponseDto> {
+    const { page, limit, sortBy, sortOrder, ...filterData } = query;
+    const filter = this.buildFilter(filterData);
     const pagination = { page, limit, sortBy, sortOrder };
 
     const result = await this.usersRepository.findByFilterWithPagination(
-      this.buildFilter(filter),
+      filter,
       pagination,
     );
 
@@ -59,7 +70,10 @@ export class UsersService {
     return UserResponseDto.fromUser(user);
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto> {
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
     const user = await this.usersRepository.findById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
@@ -88,7 +102,22 @@ export class UsersService {
     return this.usersRepository.findByEmail(email);
   }
 
-  private buildFilter(query: Omit<QueryUserDto, 'page' | 'limit' | 'sortBy' | 'sortOrder'>): Prisma.UserWhereInput {
+  async findByEmailOrPhone(emailOrPhone: string): Promise<User | null> {
+    return this.usersRepository.findByEmailOrPhone(emailOrPhone);
+  }
+
+  async validateUser(
+    identifier: string,
+    password: string,
+  ): Promise<User | null> {
+    const user = await this.usersRepository.findByEmailOrPhone(identifier);
+    if (user && (await bcrypt.compare(password, user.passwordHash))) {
+      return user;
+    }
+    return null;
+  }
+
+  private buildFilter(query: QueryUserDto): Prisma.UserWhereInput {
     const filter: Prisma.UserWhereInput = {};
 
     if (query.email) {

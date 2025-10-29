@@ -1,17 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { QueryUserDto } from './dto/query-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
 import { Roles } from '../../core/decorators/roles.decorator';
-import { UserRole } from '../../../generated/prisma';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PaginatedQueryUserDto } from './dto/paginated-query-user.dto';
+import { QueryUserDto } from './dto/query-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
+import { UsersService } from './users.service';
+import { Pageable } from 'src/core/interfaces';
+import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('users')
-@Roles(UserRole.ADMIN)
+@Roles(UserRole.admin)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -23,12 +40,16 @@ export class UsersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Get all users (non-paginated)' })
   @ApiResponse({ status: 200, type: [UserResponseDto] })
   findAll(@Query() query: QueryUserDto) {
-    if (Object.keys(query).length === 0) {
-      return this.usersService.findAll();
-    }
+    return this.usersService.findAll(query);
+  }
+
+  @Get('paginated')
+  @ApiOperation({ summary: 'Get all users (paginated)' })
+  @ApiResponse({ status: 200, type: PageableUserResponseDto })
+  findAllPaginated(@Query() query: PaginatedQueryUserDto) {
     return this.usersService.findAllWithPagination(query);
   }
 

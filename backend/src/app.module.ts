@@ -1,5 +1,3 @@
-// src/app.module.ts
-
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -25,7 +23,6 @@ import { RolesGuard } from './core/guards/roles.guard';
     PrismaModule,
     AuthModule,
     UsersModule,
-    // Other modules will be added here as we create them
   ],
   controllers: [AppController],
   providers: [

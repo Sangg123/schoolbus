@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { BaseRepository } from '../../core/repositories/base.repository';
-import { User, Prisma } from '../../../generated/prisma';
+import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UsersRepository extends BaseRepository<
@@ -27,6 +27,14 @@ export class UsersRepository extends BaseRepository<
   async findByPhone(phone: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { phone },
+    });
+  }
+
+  async findByEmailOrPhone(emailOrPhone: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        OR: [{ email: emailOrPhone }, { phone: emailOrPhone }],
+      },
     });
   }
 }
