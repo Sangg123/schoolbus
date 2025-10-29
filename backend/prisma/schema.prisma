@@ -13,3 +13,247 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  fullName     String
+  phone        String?  @unique
+  role         UserRole
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  admin   Admin?
+  driver  Driver?
+  parent  Parent?
+  
+  sentNotifications     Notification[] @relation("NotificationSender")
+  receivedNotifications Notification[] @relation("NotificationReceiver")
+}
+
+model Admin {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Driver {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  citizenId String @unique
+  licenseId String @unique
+  
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schedules Schedule[]
+}
+
+model Parent {
+  id        Int    @id @default(autoincrement())
+  userId    Int    @unique
+  citizenId String @unique
+  
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  students ParentStudent[]
+}
+
+model Student {
+  id          Int             @id @default(autoincrement())
+  fullName    String
+  class       String?
+  studentCode String          @unique
+  
+  parents   ParentStudent[]
+  schedules StudentSchedule[]
+  attendances Attendance[]
+}
+
+model ParentStudent {
+  parentId  Int
+  studentId Int
+  
+  parent  Parent  @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  @@id([parentId, studentId])
+}
+
+model Bus {
+  id           Int        @id @default(autoincrement())
+  licensePlate String     @unique
+  capacity     Int?
+  currentLat   Decimal?
+  currentLng   Decimal?
+  lastUpdated  DateTime?  @default(now())
+  
+  schedules       Schedule[]
+  locationEvents  LocationEvent[]
+}
+
+model Route {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  description String?
+  
+  itineraries Itinerary[]
+  schedules   Schedule[]
+}
+
+model StopPoint {
+  id        Int     @id @default(autoincrement())
+  name      String
+  address   String?
+  latitude  Decimal
+  longitude Decimal
+  
+  itineraries            Itinerary[]
+  pickupStudentSchedules StudentSchedule[] @relation("PickupStop")
+  dropoffStudentSchedules StudentSchedule[] @relation("DropoffStop")
+  attendances            Attendance[]
+}
+
+model Itinerary {
+  id           Int       @id @default(autoincrement())
+  routeId      Int
+  stopId       Int
+  stopOrder    Int
+  estimatedTime DateTime?
+  
+  route Route     @relation(fields: [routeId], references: [id], onDelete: Cascade)
+  stop  StopPoint @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  
+  @@unique([routeId, stopOrder])
+}
+
+model Schedule {
+  id         Int         @id @default(autoincrement())
+  routeId    Int
+  busId      Int
+  driverId   Int
+  dayOfWeek  Int
+  tripType   TripType
+  startTime  DateTime
+  
+  route    Route            @relation(fields: [routeId], references: [id])
+  bus      Bus              @relation(fields: [busId], references: [id])
+  driver   Driver           @relation(fields: [driverId], references: [id])
+  trips    Trip[]
+  students StudentSchedule[]
+  
+  @@unique([routeId, dayOfWeek, tripType])
+}
+
+model StudentSchedule {
+  id            Int        @id @default(autoincrement())
+  studentId     Int
+  scheduleId    Int
+  pickupStopId  Int?
+  dropoffStopId Int?
+  
+  student     Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  schedule    Schedule   @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  pickupStop  StopPoint? @relation("PickupStop", fields: [pickupStopId], references: [id])
+  dropoffStop StopPoint? @relation("DropoffStop", fields: [dropoffStopId], references: [id])
+  
+  @@unique([studentId, scheduleId])
+}
+
+model Trip {
+  id                 Int        @id @default(autoincrement())
+  scheduleId         Int
+  tripDate           DateTime
+  
+  currentStatus      TripStatus @default(pending)
+  initialStatusTime  DateTime   @default(now())
+  finalStatusTime    DateTime?
+  actualStartTime    DateTime?
+  actualEndTime      DateTime?
+  
+  initialSnapshot Json?
+  finalSnapshot   Json?
+  
+  schedule       Schedule        @relation(fields: [scheduleId], references: [id])
+  locationEvents LocationEvent[]
+  attendances    Attendance[]
+  
+  @@unique([scheduleId, tripDate])
+}
+
+model LocationEvent {
+  id        Int     @id @default(autoincrement())
+  tripId    Int?
+  busId     Int
+  timestamp DateTime @default(now())
+  latitude  Decimal
+  longitude Decimal
+  speedKph  Float?
+  heading   Float?
+  source    LocationSource @default(device)
+  
+  trip Trip? @relation(fields: [tripId], references: [id], onDelete: SetNull)
+  bus  Bus   @relation(fields: [busId], references: [id], onDelete: Cascade)
+}
+
+model Attendance {
+  id        Int        @id @default(autoincrement())
+  tripId    Int
+  studentId Int
+  stopId    Int
+  action    AttendanceAction
+  timestamp DateTime   @default(now())
+  
+  trip    Trip      @relation(fields: [tripId], references: [id])
+  student Student   @relation(fields: [studentId], references: [id])
+  stop    StopPoint @relation(fields: [stopId], references: [id])
+  
+  @@unique([tripId, studentId])
+}
+
+model Notification {
+  id          Int        @id @default(autoincrement())
+  senderId    Int?
+  receiverId  Int
+  content     String
+  type        NotificationType
+  isRead      Boolean    @default(false)
+  sentTime    DateTime   @default(now())
+  
+  sender   User? @relation("NotificationSender", fields: [senderId], references: [id], onDelete: SetNull)
+  receiver User  @relation("NotificationReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  admin
+  driver
+  parent
+}
+
+enum TripType {
+  pickup
+  dropoff
+}
+
+enum TripStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+enum LocationSource {
+  device
+  gateway
+}
+
+enum AttendanceAction {
+  picked_up
+  dropped_off
+  absent
+}
+
+enum NotificationType {
+  warning
+  info
+  delay
+  arrival
+}

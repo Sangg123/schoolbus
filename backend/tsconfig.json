@@ -20,6 +20,11 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@app/common": ["src/common"],
+      "@app/core": ["src/core"],
+      "@app/modules/*": ["src/modules/*"]
+    }
   }
 }
