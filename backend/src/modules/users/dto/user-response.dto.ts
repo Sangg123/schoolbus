@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User, UserRole } from '../../../../generated/prisma';
+import { User, UserRole } from '@prisma/client';
 
 export class UserResponseDto {
   @ApiProperty()
@@ -11,8 +11,8 @@ export class UserResponseDto {
   @ApiProperty()
   fullName: string;
 
-  @ApiProperty({ required: false })
-  phone?: string;
+  @ApiProperty({ required: false, nullable: true })
+  phone: string | null;
 
   @ApiProperty({ enum: UserRole })
   role: UserRole;
@@ -28,7 +28,7 @@ export class UserResponseDto {
     dto.id = user.id;
     dto.email = user.email;
     dto.fullName = user.fullName;
-    dto.phone = user.phone;
+    dto.phone = user.phone; // This can be null now
     dto.role = user.role;
     dto.createdAt = user.createdAt;
     dto.updatedAt = user.updatedAt;

@@ -1,21 +1,22 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  // Serve static files from public directory
+  app.useStaticAssets(join(__dirname, '..', 'public'));
 
-  // Swagger setup
+  app.useGlobalPipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+    transform: true,
+  }));
+
   const config = new DocumentBuilder()
     .setTitle('School Bus Management API')
     .setDescription('The school bus management system API description')
@@ -25,7 +26,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  // Dynamic port support
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(3000);
+  console.log('Application is running on: http://localhost:3000');
+  console.log('Swagger UI: http://localhost:3000/api');
+  console.log('Login page: http://localhost:3000/login.html');
 }
 bootstrap();

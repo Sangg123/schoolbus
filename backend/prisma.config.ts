@@ -10,4 +10,6 @@ export default defineConfig({
   datasource: {
     url: env('DATABASE_URL'),
   },
+  log: ['query', 'info', 'warn', 'error'],
+  errorFormat: 'pretty',
 });
