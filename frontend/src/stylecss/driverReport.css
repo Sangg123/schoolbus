@@ -1,0 +1,76 @@
+.report-container {
+  padding: 20px 30px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 900px;
+  margin: 20px auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.report-title {
+  color: #0078ff;
+  font-size: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid #0078ff;
+  padding-left: 10px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #f9fbff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 120, 255, 0.05);
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #e1e8f5;
+  padding: 10px 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.report-table th {
+  background: #eaf3ff;
+  color: #0078ff;
+  font-weight: 600;
+}
+
+.report-table tr:nth-child(even) {
+  background: #f5f9ff;
+}
+
+.report-table tr:hover {
+  background: #e0f0ff;
+  transition: 0.2s;
+}
+
+.report-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.report-submit {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.report-submit button {
+  background-color: #0078ff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.3s ease;
+}
+
+.report-submit button:hover {
+  background-color: #005fcc;
+}

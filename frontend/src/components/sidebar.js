@@ -1,7 +1,7 @@
 import React from "react";
 import "../stylecss/sidebar.css";
 
-function Sidebar({isLoggedIn, loaiTK, onTrackingClick}) {
+function Sidebar({isLoggedIn, loaiTK, onTrackingClick, onNotifiClick, onViewCalendar, onStudentList, onReport, onWarning}) {
   let menu;
 
   if(isLoggedIn && loaiTK=="admin"){
@@ -19,10 +19,10 @@ function Sidebar({isLoggedIn, loaiTK, onTrackingClick}) {
     menu=
     <div className="sidebar">
       <ul>
-        <li>Xem Lịch</li>
-        <li>Danh Sách Học Sinh</li>
-        <li>Báo Cáo</li>
-        <li>Cảnh Báo</li>
+        <li onClick={onViewCalendar}>Xem Lịch</li>
+        <li onClick={onStudentList}>Danh Sách Học Sinh</li>
+        <li onClick={onReport}>Báo Cáo</li>
+        <li onClick={onWarning}>Cảnh Báo</li>
       </ul>
     </div>;
   }
@@ -31,7 +31,7 @@ function Sidebar({isLoggedIn, loaiTK, onTrackingClick}) {
     <div className="sidebar">
       <ul>
         <li onClick={onTrackingClick}>Theo Dõi Xe</li>
-        <li>Thông Báo</li>
+        <li onClick={onNotifiClick}>Thông Báo</li>
       </ul>
     </div>;
   }

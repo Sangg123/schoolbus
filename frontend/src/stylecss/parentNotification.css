@@ -1,0 +1,41 @@
+.noti-container {
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 600px;
+  margin: 20px auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.noti-title {
+  color: #0078ff;
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.noti-item {
+  border: 1px solid #e0e6f1;
+  border-radius: 8px;
+  background: #f8fbff;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  transition: 0.2s;
+}
+
+.noti-item:hover {
+  background: #eaf3ff;
+  transform: translateY(-2px);
+}
+
+.noti-item h4 {
+  margin: 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.noti-item p {
+  margin: 6px 0 0;
+  color: #555;
+  font-size: 14px;
+}
