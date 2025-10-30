@@ -14,7 +14,12 @@ export abstract class BaseRepository<T, C, U, F> {
   async findAllWithPagination(
     pagination: PaginationParams,
   ): Promise<Pageable<T>> {
-    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'asc' } = pagination;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'id',
+      sortOrder = 'asc',
+    } = pagination;
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
@@ -51,7 +56,12 @@ export abstract class BaseRepository<T, C, U, F> {
     filter: F,
     pagination: PaginationParams,
   ): Promise<Pageable<T>> {
-    const { page = 1, limit = 10, sortBy = 'id', sortOrder = 'asc' } = pagination;
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = 'id',
+      sortOrder = 'asc',
+    } = pagination;
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([
