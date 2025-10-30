@@ -11,6 +11,7 @@ function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loaiTK, setLoaiTK] = useState("");
+  const [showTracking, setShowTracking] = useState(false);
   
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "admin") {
@@ -36,6 +37,15 @@ function App() {
     }
   };
 
+  const handleLogout = ()=>{
+    setIsLoggedIn(false);
+    setShowTracking(false);
+  }
+
+  const showTrackingBus=()=>{
+    setShowTracking(true);
+  }
+
   return (
     <div className="app-container">
       {/* Thanh navbar */}
@@ -43,15 +53,23 @@ function App() {
         isLoggedIn={isLoggedIn}
         onLoginClick={() => setShowLogin(true)}
         loaiTK={loaiTK}
+        onLogoutClick={handleLogout}
       />
 
       <div className="main-layout">
         {/* Sidebar hiển thị sau khi đăng nhập */}
-        {isLoggedIn && <Sidebar />}
+        <Sidebar
+          isLoggedIn={isLoggedIn} 
+          loaiTK={loaiTK} 
+          onTrackingClick={showTrackingBus} 
+        />
 
         {/* Nội dung chính */}
-        <div className="content">
-          {isLoggedIn ? <ManageBus /> : <Home />}
+        <div className="content"> 
+          {!isLoggedIn && <Home />}
+           
+          {/* { Popup Tracking} */} 
+          { showTracking && (<ManageBus/>) } 
         </div>
       </div>
 
