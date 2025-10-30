@@ -5,14 +5,13 @@ import {
 } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { Pageable } from 'src/core/interfaces';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 import { PaginatedQueryUserDto } from './dto/paginated-query-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersRepository } from './users.repository';
-import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 
 @Injectable()
 export class UsersService {
