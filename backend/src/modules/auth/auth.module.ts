@@ -14,10 +14,11 @@ import { UsersModule } from '../users/users.module';
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
+      // @ts-ignore
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { 
-          expiresIn: configService.get<string>('JWT_EXPIRATION') || '1d' 
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRATION') || '1d',
         },
       }),
       inject: [ConfigService],

@@ -1,6 +1,6 @@
-import { ApiPropertyOptional, IntersectionType } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { UserRoleEnum } from 'src/core/enums/user-role.enum';
 
 export class QueryUserDto {
   @ApiPropertyOptional()
@@ -18,8 +18,8 @@ export class QueryUserDto {
   @IsString()
   phone?: string;
 
-  @ApiPropertyOptional({ enum: UserRole })
+  @ApiPropertyOptional({ enum: UserRoleEnum })
   @IsOptional()
-  @IsEnum(UserRole)
-  role?: UserRole;
+  @IsEnum(UserRoleEnum)
+  role?: UserRoleEnum;
 }

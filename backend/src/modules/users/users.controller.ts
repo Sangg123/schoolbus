@@ -14,21 +14,20 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserRole } from '@prisma/client';
+import { UserRoleEnum } from 'src/core/enums/user-role.enum';
 import { Roles } from '../../core/decorators/roles.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 import { PaginatedQueryUserDto } from './dto/paginated-query-user.dto';
 import { QueryUserDto } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UsersService } from './users.service';
-import { Pageable } from 'src/core/interfaces';
-import { PageableUserResponseDto } from './dto/pageable-user-response.dto';
 
 @ApiTags('users')
 @ApiBearerAuth()
 @Controller('users')
-@Roles(UserRole.admin)
+@Roles(UserRoleEnum.admin)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
