@@ -14,6 +14,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { UsersRepository } from '../users/users.repository';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -37,6 +38,10 @@ export class AuthService {
       loginDto.password,
     );
 
+    return this.loginWithUser(user);
+  }
+
+  loginWithUser(user: User) {
     const payload = {
       email: user.email,
       sub: user.id,
