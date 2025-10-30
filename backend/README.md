@@ -1,3 +1,54 @@
+## 🚀 How to Run the Project
+
+This project uses **NestJS** for the backend and **Prisma Dev Server** for the database. To get started, follow these steps:
+
+### 🧱 1. Start the Prisma Dev Server
+
+Open **Terminal 1** and run:
+
+```bash
+yarn prisma:dev
+```
+
+This launches the local Prisma database server. **Leave this terminal running** — it must stay active while you work with the app.
+
+---
+
+### 🌱 2. Seed the Database
+
+Once the Prisma Dev Server is running, open **Terminal 2** and run:
+
+```bash
+yarn db:setup
+```
+
+This will:
+
+- Apply any pending Prisma migrations
+- Seed the database with default data (e.g. admin user)
+
+---
+
+### 🚦 3. Start the NestJS Application
+
+With the database ready, you can now start the backend server:
+
+```bash
+yarn start:dev
+```
+
+Your NestJS app will launch and connect to the Prisma Dev Server.
+
+---
+
+### ✅ Summary
+
+| Terminal | Command           | Purpose                              |
+| -------- | ----------------- | ------------------------------------ |
+| 1        | `yarn prisma:dev` | Start Prisma Dev Server (leave open) |
+| 2        | `yarn db:setup`   | Migrate and seed the database        |
+| 2        | `yarn start:dev`  | Start NestJS backend                 |
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
