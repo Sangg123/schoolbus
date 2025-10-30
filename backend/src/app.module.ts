@@ -18,7 +18,10 @@ import { RolesGuard } from './core/guards/roles.guard';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: process.env.JWT_EXPIRATION || '1d' },
+      signOptions: {
+        // @ts-ignore
+        expiresIn: (process.env.JWT_EXPIRATION as string) || '1d',
+      },
     }),
     PrismaModule,
     AuthModule,

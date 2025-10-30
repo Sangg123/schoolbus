@@ -24,7 +24,8 @@
     "paths": {
       "@app/common": ["src/common"],
       "@app/core": ["src/core"],
-      "@app/modules/*": ["src/modules/*"]
+      "@app/modules/*": ["src/modules/*"],
+      // "@generated/*": ["generated/*"]
     }
   }
 }
