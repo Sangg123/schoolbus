@@ -11,17 +11,26 @@ import DRViewCalendar from "./drivers/driverViewCalendar";
 import DRStudentList from "./drivers/driverStudentList";
 import DRReport from "./drivers/driverReport";
 import DRWarning from "./drivers/driverWarning";
+import ADManageAcc from "./admin/adminManageAcc";
+import ADListStudents from "./admin/adminListStudents";
+import ADListDrivers from "./admin/adminListDrivers";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loaiTK, setLoaiTK] = useState("");
+
   const [showTracking, setShowTracking] = useState(false);
   const [showNotifi, setShowNotifi] = useState(false);
+
   const [showCalendar, setShowCalendar] = useState(false);
   const [showStudentList, setShowStudentList] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+
+  const [showAccount, setShowAccount] = useState(false);
+  const [showListStudent, setShowListStudent] = useState(false);
+  const [showListDriver, setShowListDriver] = useState(false);
   
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "admin") {
@@ -49,14 +58,21 @@ function App() {
 
   const handleLogout = ()=>{
     setIsLoggedIn(false);
+
     setShowTracking(false);
     setShowNotifi(false);
+
     setShowCalendar(false);
     setShowStudentList(false);
     setShowReport(false);
     setShowWarning(false);
+
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowListDriver(false);
   }
 
+  // chức năng menu cho parent
   const showTrackingBus=()=>{
     setShowTracking(true);
     setShowNotifi(false);
@@ -66,6 +82,7 @@ function App() {
     setShowTracking(false);
   }
 
+  // chức năng menu cho driver
   const showViewCalendar = ()=>{
     setShowCalendar(true);
     setShowStudentList(false);
@@ -91,6 +108,23 @@ function App() {
     setShowCalendar(false);
   }
 
+  // chức năng menu cho admin
+  const showViewAcc = ()=>{
+    setShowAccount(true);
+    setShowListStudent(false);
+    setShowListDriver(false);
+  }
+  const showViewListStudent = ()=>{
+    setShowListStudent(true);
+    setShowAccount(false);
+    setShowListDriver(false);
+  }
+  const showViewListDriver = ()=>{
+    setShowListDriver(true);
+    setShowAccount(false);
+    setShowListStudent(false);
+  }
+
   return (
     <div className="app-container">
       {/* Thanh navbar */}
@@ -106,12 +140,18 @@ function App() {
         <Sidebar
           isLoggedIn={isLoggedIn} 
           loaiTK={loaiTK} 
+
           onTrackingClick={showTrackingBus} 
           onNotifiClick={showNotification}
+
           onViewCalendar={showViewCalendar}
           onStudentList={showViewStudentList}
           onReport={showViewReport}
           onWarning={showViewWarning}
+
+          onManageAcc={showViewAcc}
+          onListStudents={showViewListStudent}
+          onListDrivers={showViewListDriver}
         />
 
         {/* Nội dung chính */}
@@ -137,6 +177,16 @@ function App() {
 
           {/* Popup Warning */}
           { showWarning && (<DRWarning/>)}
+
+        {/* Admin's Menu */}
+          {/* Popup Manage Account */}
+          {showAccount && (<ADManageAcc/>)}
+
+          {/* Popup List Student */}
+          {showListStudent && (<ADListStudents/>)}
+
+          {/* Popup List Driver */}
+          {showListDriver && (<ADListDrivers/>)}
 
         </div>
       </div>

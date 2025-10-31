@@ -58,3 +58,60 @@
 .sidebar ul li:last-child {
   margin-bottom: 8px;
 }
+
+/* Submenu (ẩn mặc định, hiển thị sang phải) */
+.has-submenu {
+  position: relative;
+}
+
+/* Submenu xuất hiện sang bên phải */
+.has-submenu .submenu {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  margin-left: 0px;
+  list-style: none;
+  background: #ffffff;
+  border: 1px solid #e0e6ef;
+  border-radius: 8px;
+  padding: 6px 0;
+  min-width: 180px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  animation: slideInRight 0.2s ease-in-out;
+  z-index: 100;
+}
+
+/* Hover vào cha thì submenu hiện */
+.has-submenu:hover .submenu {
+  display: block;
+}
+
+/* Style submenu item */
+.submenu li {
+  font-size: 14px;
+  color: #555;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.submenu li:hover {
+  background: #e6f1ff;
+  color: #0078ff;
+  transform: translateX(3px);
+}
+
+/* Hiệu ứng trượt sang phải */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+

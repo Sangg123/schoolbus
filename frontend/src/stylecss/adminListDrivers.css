@@ -1,0 +1,86 @@
+.drv-container {
+  margin: 30px auto;
+  width: 90%;
+  max-width: 1000px;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.drv-title {
+  text-align: center;
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.drv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: #fafafa;
+}
+
+.drv-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.drv-table td {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.drv-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.drv-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.add-btn,
+.save-btn,
+.edit-btn,
+.delete-btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.add-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: #333;
+  margin-right: 5px;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.add-btn:hover { background-color: #218838; }
+.save-btn:hover { background-color: #138496; }
+.edit-btn:hover { background-color: #e0a800; }
+.delete-btn:hover { background-color: #c82333; }
