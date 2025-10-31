@@ -7,7 +7,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @MinLength(6)
+  @MinLength(1)
   password?: string;
 
   @ApiPropertyOptional({ enum: UserRoleEnum })

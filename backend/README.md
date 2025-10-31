@@ -1,3 +1,83 @@
+## 🚀 How to Run the Project
+
+This project uses **NestJS** for the backend and **PostgreSQL** as the database. To run the application locally, follow these steps:
+
+---
+
+### 🧱 1. Set Up Your PostgreSQL Database
+
+You’ll need a running PostgreSQL instance. You can use:
+
+- A local PostgreSQL server (e.g. via Docker or installed manually)
+- A cloud-hosted database (e.g. Supabase, Railway, Heroku)
+
+Update your `.env` file with your database credentials:
+
+```env
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+```
+
+> Replace `USER`, `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your actual values.  
+> If you're unsure about the `schema`, use `public` (the default).
+
+---
+
+### 📁 2. Configure Environment Variables
+
+Copy the example environment file and rename it:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` to match your PostgreSQL setup.
+
+---
+
+### 🧪 3. Migrate and Seed the Database
+
+Run the following command to apply Prisma migrations and seed the database:
+
+```bash
+yarn db:setup
+```
+
+This will:
+
+- Apply any pending Prisma migrations
+- Seed the database with default data (e.g. admin user)
+
+---
+
+### 🚦 4. Start the NestJS Backend
+
+Now start the backend server:
+
+```bash
+yarn start:dev
+```
+
+Your NestJS app will launch and connect to your configured PostgreSQL database.
+
+---
+
+### ✅ Summary
+
+| Step | Command                | Purpose                       |
+| ---- | ---------------------- | ----------------------------- |
+| 1    | `cp .env.example .env` | Set up environment variables  |
+| 2    | `yarn db:setup`        | Migrate and seed the database |
+| 3    | `yarn start:dev`       | Start NestJS backend          |
+
+---
+
+### 📚 Additional Notes
+
+- Prisma reads the connection string from `.env` via `env("DATABASE_URL")` in `schema.prisma`.
+- The Prisma client is generated in `generated/prisma` — no need to run `prisma dev`.
+
+---
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

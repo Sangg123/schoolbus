@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsNumber, Min, IsString, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsIn, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class BaseQueryDto {
   @ApiPropertyOptional({ default: 1 })

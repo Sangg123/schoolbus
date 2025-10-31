@@ -1,15 +1,22 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import type { User } from '@prisma/client';
 import { CurrentUser } from '../../core/decorators/current-user.decorator';
 import { Public } from '../../core/decorators/public.decorator';
+import { UserResponseDto } from '../users/dto/user-response.dto';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import type { User } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,20 +27,29 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOperation({ summary: 'Login user' })
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  @ApiResponse({ status: 200, type: LoginResponseDto })
+  // async login(@Body() loginDto: LoginDto) {
+  //   return this.authService.login(loginDto);
+  // }
+  async login(
+    @Body() _loginDto: LoginDto,
+    @CurrentUser() user: User,
+  ): Promise<LoginResponseDto> {
+    return this.authService.loginWithUser(user);
   }
 
   @Public()
   @Post('register')
   @ApiOperation({ summary: 'Register new user' })
-  async register(@Body() registerDto: RegisterDto) {
+  @ApiResponse({ status: 200, type: UserResponseDto })
+  async register(@Body() registerDto: RegisterDto): Promise<UserResponseDto> {
     return this.authService.register(registerDto);
   }
 
   @Post('logout')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 200 })
   async logout() {
     return this.authService.logout();
   }
@@ -41,6 +57,7 @@ export class AuthController {
   @Post('change-password')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Change password' })
+  @ApiResponse({ status: 200 })
   async changePassword(
     @CurrentUser() user: User,
     @Body() changePasswordDto: ChangePasswordDto,
@@ -51,6 +68,7 @@ export class AuthController {
   @Public()
   @Post('forgot-password')
   @ApiOperation({ summary: 'Request password reset' })
+  @ApiResponse({ status: 200 })
   async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
     return this.authService.forgotPassword(forgotPasswordDto);
   }
@@ -58,6 +76,7 @@ export class AuthController {
   @Public()
   @Post('reset-password')
   @ApiOperation({ summary: 'Reset password with token' })
+  @ApiResponse({ status: 200 })
   async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
     return this.authService.resetPassword(resetPasswordDto);
   }
@@ -65,7 +84,8 @@ export class AuthController {
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
-  async getProfile(@CurrentUser() user: User) {
+  @ApiResponse({ status: 200, type: UserResponseDto })
+  async getProfile(@CurrentUser() user: User): Promise<UserResponseDto> {
     return this.authService.getProfile(user.id);
   }
 }

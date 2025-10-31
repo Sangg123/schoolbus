@@ -1,19 +1,22 @@
 import {
-  Injectable,
-  UnauthorizedException,
   BadRequestException,
-  ConflictException,
+  Injectable,
+  Logger,
   NotFoundException,
+  UnauthorizedException
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import ms from 'ms';
+import { UserResponseDto } from '../users/dto/user-response.dto';
+import { UsersRepository } from '../users/users.repository';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +25,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+
+  private readonly logger = new Logger(AuthService.name);
 
   async validateUser(identifier: string, password: string) {
     const user = await this.usersService.validateUser(identifier, password);
@@ -37,20 +42,25 @@ export class AuthService {
       loginDto.password,
     );
 
+    return this.loginWithUser(user);
+  }
+
+  loginWithUser(user: User) {
     const payload = {
       email: user.email,
       sub: user.id,
       role: user.role,
     };
 
+    const expiresIn = process.env.JWT_EXPIRATION || '1d';
+    // @ts-ignore
+    const expiresMs = ms(expiresIn) ?? ms('1d');
+    const expiresAt = new Date(Date.now() + expiresMs).toISOString();
+
     return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        role: user.role,
-      },
+      accessToken: this.jwtService.sign(payload),
+      user: UserResponseDto.fromUser(user),
+      expiresAt,
     };
   }
 
@@ -97,6 +107,9 @@ export class AuthService {
     };
 
     const resetToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+    this.logger.log(
+      `Password reset token generated for user ${user.id}: ${resetToken}`,
+    );
 
     // In a real app, you would send this token via email
     // For now, we'll return it (for demo purposes only!)
