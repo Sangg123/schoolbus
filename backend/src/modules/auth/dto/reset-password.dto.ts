@@ -8,6 +8,6 @@ export class ResetPasswordDto {
 
   @ApiProperty()
   @IsString()
-  @MinLength(6)
+  @MinLength(1)
   newPassword: string;
 }

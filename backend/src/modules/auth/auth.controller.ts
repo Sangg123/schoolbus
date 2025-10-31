@@ -1,16 +1,15 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { User } from '@prisma/client';
-import type { Request } from 'express';
 import { CurrentUser } from '../../core/decorators/current-user.decorator';
 import { Public } from '../../core/decorators/public.decorator';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,7 +23,7 @@ export class AuthController {
   // async login(@Body() loginDto: LoginDto) {
   //   return this.authService.login(loginDto);
   // }
-  async login(@CurrentUser() user: User) {
+  async login(@Body() _loginDto: LoginDto, @CurrentUser() user: User) {
     return this.authService.loginWithUser(user);
   }
 
