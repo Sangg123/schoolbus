@@ -14,6 +14,7 @@ import DRWarning from "./drivers/driverWarning";
 import ADManageAcc from "./admin/adminManageAcc";
 import ADListStudents from "./admin/adminListStudents";
 import ADListDrivers from "./admin/adminListDrivers";
+import ADMessage from "./admin/adminMessage";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -31,6 +32,7 @@ function App() {
   const [showAccount, setShowAccount] = useState(false);
   const [showListStudent, setShowListStudent] = useState(false);
   const [showListDriver, setShowListDriver] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
   
   const handleLogin = (username, password) => {
     if (username === "admin" && password === "admin") {
@@ -70,6 +72,7 @@ function App() {
     setShowAccount(false);
     setShowListStudent(false);
     setShowListDriver(false);
+    setShowMessage(false);
   }
 
   // chức năng menu cho parent
@@ -113,14 +116,23 @@ function App() {
     setShowAccount(true);
     setShowListStudent(false);
     setShowListDriver(false);
+    setShowMessage(false);
   }
   const showViewListStudent = ()=>{
     setShowListStudent(true);
     setShowAccount(false);
     setShowListDriver(false);
+    setShowMessage(false);
   }
   const showViewListDriver = ()=>{
     setShowListDriver(true);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowMessage(false);
+  }
+  const showViewMessage= ()=>{
+    setShowMessage(true);
+    setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
   }
@@ -152,6 +164,7 @@ function App() {
           onManageAcc={showViewAcc}
           onListStudents={showViewListStudent}
           onListDrivers={showViewListDriver}
+          onMessage={showViewMessage}
         />
 
         {/* Nội dung chính */}
@@ -187,6 +200,9 @@ function App() {
 
           {/* Popup List Driver */}
           {showListDriver && (<ADListDrivers/>)}
+
+          {/* Popup Message */}
+          {showMessage && (<ADMessage/>)}
 
         </div>
       </div>
