@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Pageable, PaginationParams } from '../interfaces';
 import { PrismaService } from '../prisma/prisma.service';
-import { PaginationParams, Pageable } from '../interfaces';
 
 @Injectable()
 export abstract class BaseRepository<T, C, U, F> {

@@ -7,4 +7,7 @@ export class LoginResponseDto {
 
   @ApiProperty({ type: UserResponseDto })
   user: UserResponseDto;
+
+  @ApiProperty({ description: 'Token expiration timestamp (ISO format)' })
+  expiresAt: string;
 }

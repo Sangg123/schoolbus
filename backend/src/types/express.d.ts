@@ -1,5 +1,5 @@
 // Import the base Express Request type
-import { Request } from 'express';
+import 'express';
 
 // Import the User type from your Prisma client or your custom type definition
 import { User } from '@prisma/client';

@@ -1,67 +1,459 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <title>School Bus Management - Login</title>
+  <head>
+    <title>School Bus Management - API Test Login</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 400px; margin: 100px auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
-        .token { background: #f8f9fa; padding: 10px; margin: 10px 0; word-break: break-all; font-size: 12px; }
+      :root {
+        --primary-color: #4a90e2; /* Blue */
+        --success-color: #28a745; /* Green */
+        --error-color: #dc3545; /* Red */
+        --warning-color: #ffc107; /* Yellow for token status */
+        --text-color: #333;
+        --bg-color: #f4f7f6;
+        --card-bg: #fff;
+      }
+      body {
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+      .container {
+        max-width: 450px;
+        width: 100%;
+        padding: 30px;
+        background: var(--card-bg);
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 25px;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: var(--text-color);
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+      }
+      input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background: #397cd9;
+      }
+      .token-output {
+        margin-top: 20px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+      .token-box {
+        background: #f8f9fa;
+        padding: 15px;
+        margin: 10px 0;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        word-break: break-all;
+        font-family: monospace;
+        font-size: 12px;
+      }
+      .token-value {
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .token-box pre {
+        margin: 5px 0 10px 0;
+        padding: 8px;
+        background: #eee;
+        border-radius: 3px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        overflow-x: auto;
+      }
+      .alert {
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 4px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+      .alert-error {
+        background: #f8d7da;
+        color: var(--error-color);
+        border: 1px solid #f5c6cb;
+      }
+      .alert-success {
+        background: #d4edda;
+        color: var(--success-color);
+        border: 1px solid #c3e6cb;
+      }
+      .alert-info {
+        background: #cfe2ff;
+        color: var(--primary-color);
+        border: 1px solid #b6d4fe;
+      }
+      .alert-warning {
+        background: #fff3cd;
+        color: var(--warning-color);
+        border: 1px solid #ffeeba;
+      }
+      .status-loading {
+        margin-top: 10px;
+        color: var(--primary-color);
+        text-align: center;
+        font-style: italic;
+        display: none;
+      }
+      .result-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+      .result-buttons button {
+        width: auto;
+        flex-grow: 1;
+      }
+      #copyTokenButton {
+        background: #6c757d;
+      }
+      #copyTokenButton:hover {
+        background: #5a6268;
+      }
+      #logoutButton {
+        background: var(--error-color);
+      }
+      #logoutButton:hover {
+        background: #bd2130;
+      }
     </style>
-</head>
-<body>
-    <h2>Login</h2>
-    <form id="loginForm">
+  </head>
+  <body onload="handleAutoLogin()">
+    <div class="container">
+      <h2>School Bus Management - API Test Client</h2>
+      <form id="loginForm">
         <div class="form-group">
-            <label>Email:</label>
-            <input type="email" id="email" value="admin@school.com" required>
+          <label for="identifier">Email / Phone:</label>
+          <input
+            type="text"
+            id="identifier"
+            value="admin@school.com"
+            required
+            placeholder="Email or phone number"
+          />
         </div>
         <div class="form-group">
-            <label>Password:</label>
-            <input type="password" id="password" value="admin" required>
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value="admin"
+            required
+            placeholder="Minimum 6 characters"
+          />
         </div>
-        <button type="submit">Login</button>
-    </form>
-    
-    <div id="result" style="display: none;">
-        <h3>Login Successful!</h3>
-        <p>Your JWT Token:</p>
-        <div class="token" id="tokenDisplay"></div>
-        <p>Copy this token and use it in Swagger UI as Bearer token.</p>
-        <button onclick="location.href='/api'">Go to Swagger UI</button>
+        <button type="submit" id="loginButton">Login</button>
+      </form>
+
+      <!-- Centralized feedback area -->
+      <div id="statusMessage" class="status-loading">Processing...</div>
+
+      <div id="alertBox" class="alert alert-error" style="display: none"></div>
+      <div id="infoBox" class="alert alert-info" style="display: none"></div>
+
+      <div id="result" class="token-output" style="display: none">
+        <div class="alert alert-success" id="successMessage">
+          Login Successful! Token received.
+        </div>
+        <p>Your **JWT Token** and test results:</p>
+        <div class="token-box" id="tokenDisplay"></div>
+
+        <div class="result-buttons">
+          <button id="copyTokenButton">📋 Copy Access Token</button>
+          <button id="logoutButton">👋 Logout</button>
+          <button onclick="window.location.href='/api'">
+            Go to Swagger UI
+          </button>
+        </div>
+      </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            try {
-                const response = await fetch('/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ identifier: email, password })
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    document.getElementById('tokenDisplay').textContent = data.access_token;
-                    document.getElementById('result').style.display = 'block';
-                    document.getElementById('loginForm').style.display = 'none';
-                    
-                    // Store token for potential future use
-                    localStorage.setItem('jwt_token', data.access_token);
-                } else {
-                    alert('Login failed: ' + (await response.text()));
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
+      const loginForm = document.getElementById('loginForm');
+      const identifierInput = document.getElementById('identifier');
+      const passwordInput = document.getElementById('password');
+      const alertBox = document.getElementById('alertBox');
+      const infoBox = document.getElementById('infoBox');
+      const resultBox = document.getElementById('result');
+      const tokenDisplay = document.getElementById('tokenDisplay');
+      const loginButton = document.getElementById('loginButton');
+      const statusMessage = document.getElementById('statusMessage');
+      const successMessage = document.getElementById('successMessage');
+      const copyTokenButton = document.getElementById('copyTokenButton');
+      const logoutButton = document.getElementById('logoutButton');
+
+      let currentToken = '';
+
+      /** Clears previous state */
+      const resetState = () => {
+        alertBox.style.display = 'none';
+        alertBox.innerHTML = '';
+        infoBox.style.display = 'none';
+        infoBox.innerHTML = '';
+        resultBox.style.display = 'none';
+        tokenDisplay.innerHTML = '';
+        statusMessage.style.display = 'none';
+        loginButton.disabled = false;
+        loginForm.style.display = 'block';
+      };
+
+      /** Displays an error message */
+      const showAlert = (message, isError = true) => {
+        const target = isError ? alertBox : infoBox;
+        target.innerHTML = message;
+        target.style.display = 'block';
+        if (isError) console.error('Error:', message);
+      };
+
+      /** Converts Unix timestamp (seconds) to human-readable ISO format */
+      const formatUnixTimestamp = (timestamp) => {
+        if (!timestamp) return 'N/A';
+        // JWT timestamps (iat/exp) are in seconds
+        return new Date(timestamp * 1000).toISOString();
+      };
+
+      /** Decodes JWT and displays all time details */
+      const decodeTokenAndDisplayDetails = (token, data, isRelogin = false) => {
+        try {
+          const tokenPayload = token.split('.')[1];
+          const decoded = JSON.parse(atob(tokenPayload));
+
+          const iatIso = formatUnixTimestamp(decoded.iat);
+          const expIso = formatUnixTimestamp(decoded.exp);
+
+          // Set the success message for relogin
+          if (isRelogin) {
+            successMessage.textContent =
+              'Auto-relogin successful using stored token.';
+          } else {
+            successMessage.textContent = 'Login Successful! Token received.';
+          }
+
+          tokenDisplay.innerHTML = `
+                  <strong>Access Token:</strong>
+                  <span class="token-value" id="accessTokenValue">${token}</span>
+                  
+                  <strong>Token Timestamps:</strong>
+                  <pre>
+[DTO] Expires At: ${data.expiresAt || 'N/A (check DTO)'}
+[JWT] Issued At (iat):  ${iatIso}
+[JWT] Expires (exp):    ${expIso}</pre>
+                  
+                  <strong>Decoded JWT Payload:</strong>
+                  <pre>${JSON.stringify(decoded, null, 2)}</pre>
+                  
+                  <strong>--- Testing Protected Route (/auth/me) ---</strong>
+              `;
+        } catch (decodeError) {
+          showAlert('Warning: Failed to decode token or process timestamps.');
+        }
+      };
+
+      /** Test /auth/me and update tokenDisplay */
+      const testProtectedRoute = async (token) => {
+        try {
+          const meResponse = await fetch('/auth/me', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!meResponse.ok) {
+            const errorText = await meResponse.text();
+            tokenDisplay.innerHTML += `<div style="color: var(--error-color);">**FAIL**: /auth/me returned ${meResponse.status}. Error: ${errorText}</div>`;
+            return null; // Return null on failure
+          } else {
+            const meData = await meResponse.json();
+            tokenDisplay.innerHTML += `
+                      <div style="color: var(--success-color);">**SUCCESS**: Fetched user details.</div>
+                      <strong>/auth/me Response Data:</strong>
+                      <pre>${JSON.stringify(meData, null, 2)}</pre>
+                  `;
+            return meData; // Return data on success
+          }
+        } catch (meError) {
+          showAlert(`Error fetching /auth/me: ${meError.message}`);
+          return null;
+        }
+      };
+
+      /** Logic to run on page load */
+      const handleAutoLogin = async () => {
+        const storedToken = localStorage.getItem('jwt_token');
+        if (!storedToken) {
+          console.log('No stored token found. Showing login form.');
+          return;
+        }
+
+        resetState();
+        statusMessage.textContent =
+          'Attempting auto-relogin with stored token...';
+        statusMessage.style.display = 'block';
+
+        // Set global token for copy button if needed during this phase
+        currentToken = storedToken;
+
+        const meData = await testProtectedRoute(storedToken);
+
+        if (meData) {
+          // Simulating the login response structure for display purposes
+          const fakeLoginData = {
+            accessToken: storedToken,
+            user: meData,
+            expiresAt: 'Unknown (from stored token)',
+          };
+
+          decodeTokenAndDisplayDetails(storedToken, fakeLoginData, true);
+
+          // 💡 FIX: Manually append the /auth/me success display block here,
+          // since testProtectedRoute only returns the data but doesn't handle display on success.
+          tokenDisplay.innerHTML += `
+                  <div style="color: var(--success-color);">**SUCCESS**: Fetched user details.</div>
+                  <strong>/auth/me Response Data:</strong>
+                  <pre>${JSON.stringify(meData, null, 2)}</pre>
+              `;
+
+          resultBox.style.display = 'block';
+          loginForm.style.display = 'none';
+          showAlert('Successfully re-authenticated using stored token!', false); // false = info box
+        } else {
+          // Check if the failure was 401 (Unauthorized)
+          if (meData === null) {
+            const response = await fetch('/auth/me', {
+              headers: { Authorization: `Bearer ${storedToken}` },
+            });
+            if (response.status === 401) {
+              showAlert('Token expired or invalid. Please log in again.');
+              logout(false); // Clear token, but don't reset fully yet
             }
-        });
+          }
+        }
+        statusMessage.style.display = 'none';
+      };
+
+      /** Clears the token and resets the UI */
+      const logout = (showInfo = true) => {
+        localStorage.removeItem('jwt_token');
+        currentToken = '';
+        resetState();
+        if (showInfo) {
+          showAlert('Logged out successfully.', false); // false = info box
+        }
+        console.log('User logged out. Token cleared.');
+      };
+
+      // --- Event Listeners ---
+
+      logoutButton.addEventListener('click', () => logout(true));
+
+      const copyTokenToClipboard = async () => {
+        if (!currentToken) return;
+
+        try {
+          await navigator.clipboard.writeText(currentToken);
+          copyTokenButton.textContent = '✅ Copied!';
+          setTimeout(() => {
+            copyTokenButton.textContent = '📋 Copy Access Token';
+          }, 1500);
+        } catch (err) {
+          showAlert('Failed to copy token to clipboard. Please copy manually.');
+          console.error('Copy failed:', err);
+        }
+      };
+
+      copyTokenButton.addEventListener('click', copyTokenToClipboard);
+
+      /** Main form submission logic */
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        resetState();
+
+        const identifier = identifierInput.value;
+        const password = passwordInput.value;
+
+        loginButton.disabled = true;
+        statusMessage.textContent = 'Logging in...';
+        statusMessage.style.display = 'block';
+
+        try {
+          // --- 1. Login Attempt ---
+          const response = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ identifier, password }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            const errorMessage = errorData.message
+              ? JSON.stringify(errorData.message)
+              : errorData.error || 'Unknown error';
+            showAlert(`Login Failed (${response.status}): ${errorMessage}`);
+            return;
+          }
+
+          const data = await response.json();
+          const token = data.accessToken || data.access_token;
+          currentToken = token;
+
+          // --- 2. Decode Token and Display Times ---
+          decodeTokenAndDisplayDetails(token, data, false);
+
+          // --- 3. Test /auth/me ---
+          await testProtectedRoute(token);
+
+          // --- 4. Final Success State ---
+          resultBox.style.display = 'block';
+          loginForm.style.display = 'none';
+          localStorage.setItem('jwt_token', token);
+        } catch (error) {
+          showAlert(`Unexpected network error: ${error.message}`);
+        } finally {
+          statusMessage.style.display = 'none';
+          loginButton.disabled = false;
+        }
+      });
+
+      // Ensure auto-login runs on initial load if the environment supports it
+      // handleAutoLogin() is called via the <body> onload attribute
     </script>
-</body>
+  </body>
 </html>
