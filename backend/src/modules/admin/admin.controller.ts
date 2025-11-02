@@ -1,5 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -8,6 +23,7 @@ import { PaginatedQueryAdminDto } from './dto/paginated-query-admin.dto';
 import { AdminResponseDto } from './dto/admin-response.dto';
 import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { PageableAdminResponseDto } from './dto/pageable-admin-response.dto';
 
 @ApiTags('admin')
 @ApiBearerAuth()
@@ -32,7 +48,7 @@ export class AdminController {
 
   @Get('paginated')
   @ApiOperation({ summary: 'Get all admins (paginated)' })
-  @ApiResponse({ status: 200 })
+  @ApiResponse({ status: 200, type: PageableAdminResponseDto })
   findAllPaginated(@Query() query: PaginatedQueryAdminDto) {
     return this.adminService.findAllWithPagination(query);
   }
