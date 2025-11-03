@@ -1,28 +1,38 @@
-## 🚀 How to Run the Project
+# 🚀 How to Run the Project
 
 This project uses **NestJS** for the backend and **PostgreSQL** as the database. To run the application locally, follow these steps:
 
 ---
 
-### 🧱 1. Set Up Your PostgreSQL Database
+## 🧱 1. Set Up PostgreSQL (No Docker Required)
 
-You’ll need a running PostgreSQL instance. You can use:
+This project includes a batch script to run PostgreSQL on-demand without installing it globally or using Docker.
 
-- A local PostgreSQL server (e.g. via Docker or installed manually)
-- A cloud-hosted database (e.g. Supabase, Railway, Heroku)
+### 🔧 Configure PostgreSQL
 
-Update your `.env` file with your database credentials:
+1. Download the PostgreSQL binaries from [EnterpriseDB](https://www.enterprisedb.com/download-postgresql-binaries).
+2. Extract them into:
+   ```
+   external-tools/postgres/postgresql-18.0-2-windows-x64-binaries/pgsql
+   ```
+3. Ensure the folder structure matches the expected path in `start-postgres.bat`.
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+### ▶️ Start PostgreSQL
+
+Run the following script from your project root:
+
+```bash
+start-postgres.bat
 ```
 
-> Replace `USER`, `PASSWORD`, `HOST`, `PORT`, and `DATABASE` with your actual values.  
-> If you're unsure about the `schema`, use `public` (the default).
+- On first run, it will initialize the data directory.
+- PostgreSQL runs in the foreground; close the command window to stop it.
+
+> 💡 Automatically creates the schoolbus database if it doesn't exist.
 
 ---
 
-### 📁 2. Configure Environment Variables
+## 📁 2. Configure Environment Variables
 
 Copy the example environment file and rename it:
 
@@ -30,11 +40,15 @@ Copy the example environment file and rename it:
 cp .env.example .env
 ```
 
-Then edit `.env` to match your PostgreSQL setup.
+Then edit `.env` to match your PostgreSQL setup:
+
+```env
+DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/schoolbus?schema=public"
+```
 
 ---
 
-### 🧪 3. Migrate and Seed the Database
+## 🧪 3. Migrate and Seed the Database
 
 Run the following command to apply Prisma migrations and seed the database:
 
@@ -49,7 +63,7 @@ This will:
 
 ---
 
-### 🚦 4. Start the NestJS Backend
+## 🚦 4. Start the NestJS Backend
 
 Now start the backend server:
 
@@ -61,20 +75,23 @@ Your NestJS app will launch and connect to your configured PostgreSQL database.
 
 ---
 
-### ✅ Summary
+## ✅ Summary
 
 | Step | Command                | Purpose                       |
 | ---- | ---------------------- | ----------------------------- |
-| 1    | `cp .env.example .env` | Set up environment variables  |
-| 2    | `yarn db:setup`        | Migrate and seed the database |
-| 3    | `yarn start:dev`       | Start NestJS backend          |
+| 1    | `start-postgres.bat`   | Start PostgreSQL locally      |
+| 2    | `cp .env.example .env` | Set up environment variables  |
+| 3    | `yarn db:setup`        | Migrate and seed the database |
+| 4    | `yarn start:dev`       | Start NestJS backend          |
 
 ---
 
-### 📚 Additional Notes
+## 📚 Additional Notes
 
 - Prisma reads the connection string from `.env` via `env("DATABASE_URL")` in `schema.prisma`.
 - The Prisma client is generated in `generated/prisma` — no need to run `prisma dev`.
+- PostgreSQL runs as a foreground process. To stop it, close the command prompt window.
+- The `schoolbus` database is created automatically if missing.
 
 ---
 
