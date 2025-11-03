@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
 
 export class QueryAdminDto {
   @ApiPropertyOptional()

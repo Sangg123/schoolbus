@@ -1,16 +1,15 @@
 import {
   Injectable,
-  ConflictException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
-import { AdminRepository } from './admin.repository';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
-import { AdminResponseDto } from './dto/admin-response.dto';
-import { QueryAdminDto } from './dto/query-admin.dto';
-import { PaginatedQueryAdminDto } from './dto/paginated-query-admin.dto';
 import { Prisma } from '@prisma/client';
+import { AdminRepository } from './admin.repository';
+import { AdminResponseDto } from './dto/admin-response.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { PageableAdminResponseDto } from './dto/pageable-admin-response.dto';
+import { PaginatedQueryAdminDto } from './dto/paginated-query-admin.dto';
+import { QueryAdminDto } from './dto/query-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminService {

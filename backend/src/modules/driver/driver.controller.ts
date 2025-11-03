@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
+import { UserRole } from '@prisma/client';
+import { Roles } from '../../core/decorators/roles.decorator';
 import { DriverService } from './driver.service';
 import { CreateDriverDto } from './dto/create-driver.dto';
-import { UpdateDriverDto } from './dto/update-driver.dto';
-import { QueryDriverDto } from './dto/query-driver.dto';
-import { PaginatedQueryDriverDto } from './dto/paginated-query-driver.dto';
 import { DriverResponseDto } from './dto/driver-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
-import { UserRole } from '@prisma/client';
 import { PageableDriverResponseDto } from './dto/pageable-driver-response.dto';
+import { PaginatedQueryDriverDto } from './dto/paginated-query-driver.dto';
+import { QueryDriverDto } from './dto/query-driver.dto';
+import { UpdateDriverDto } from './dto/update-driver.dto';
 
 @ApiTags('driver')
 @ApiBearerAuth()

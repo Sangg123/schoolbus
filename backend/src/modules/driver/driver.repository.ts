@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { Driver, Prisma } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { BaseRepository } from '../../core/repositories/base.repository';
-import { Driver, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DriverRepository extends BaseRepository<

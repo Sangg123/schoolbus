@@ -92,7 +92,7 @@ def main():
             return
     else:
         # No argument: Read from clipboard
-        content = pyperclip.paste()
+        content = pyperclip.paste().replace("\r\n", "\n")
         print("📋 Reading content from clipboard...")
 
     # Ensure content is not empty

@@ -1,16 +1,15 @@
 import {
   Injectable,
-  ConflictException,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { DriverRepository } from './driver.repository';
 import { CreateDriverDto } from './dto/create-driver.dto';
-import { UpdateDriverDto } from './dto/update-driver.dto';
 import { DriverResponseDto } from './dto/driver-response.dto';
-import { QueryDriverDto } from './dto/query-driver.dto';
-import { PaginatedQueryDriverDto } from './dto/paginated-query-driver.dto';
-import { Prisma } from '@prisma/client';
 import { PageableDriverResponseDto } from './dto/pageable-driver-response.dto';
+import { PaginatedQueryDriverDto } from './dto/paginated-query-driver.dto';
+import { QueryDriverDto } from './dto/query-driver.dto';
+import { UpdateDriverDto } from './dto/update-driver.dto';
 
 @Injectable()
 export class DriverService {
@@ -71,11 +70,13 @@ export class DriverService {
     }
 
     const updatedDriver = await this.driverRepository.update(id, {
-      user: updateDriverDto.userId ? {
-        connect: {
-          id: updateDriverDto.userId,
-        },
-      } : undefined,
+      user: updateDriverDto.userId
+        ? {
+            connect: {
+              id: updateDriverDto.userId,
+            },
+          }
+        : undefined,
       citizenId: updateDriverDto.citizenId,
       licenseId: updateDriverDto.licenseId,
     });

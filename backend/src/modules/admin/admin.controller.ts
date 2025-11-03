@@ -1,29 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
-  UseGuards,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
-import { QueryAdminDto } from './dto/query-admin.dto';
-import { PaginatedQueryAdminDto } from './dto/paginated-query-admin.dto';
-import { AdminResponseDto } from './dto/admin-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { AdminService } from './admin.service';
+import { AdminResponseDto } from './dto/admin-response.dto';
+import { CreateAdminDto } from './dto/create-admin.dto';
 import { PageableAdminResponseDto } from './dto/pageable-admin-response.dto';
+import { PaginatedQueryAdminDto } from './dto/paginated-query-admin.dto';
+import { QueryAdminDto } from './dto/query-admin.dto';
+import { UpdateAdminDto } from './dto/update-admin.dto';
 
 @ApiTags('admin')
 @ApiBearerAuth()
