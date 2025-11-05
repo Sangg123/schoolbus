@@ -15,6 +15,9 @@ import ADManageAcc from "./admin/adminManageAcc";
 import ADListStudents from "./admin/adminListStudents";
 import ADListDrivers from "./admin/adminListDrivers";
 import ADMessage from "./admin/adminMessage";
+import ADListBus from "./admin/adminListBuses";
+import ADListRoute from "./admin/adminListRoutes";
+import ADManageCalendar from "./admin/adminManageCalendar";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -32,6 +35,9 @@ function App() {
   const [showAccount, setShowAccount] = useState(false);
   const [showListStudent, setShowListStudent] = useState(false);
   const [showListDriver, setShowListDriver] = useState(false);
+  const [showListBus, setShowListBus] = useState(false);
+  const [showListRoute, setShowListRoute] = useState(false);
+  const [showManageCalendar, setShowManageCalendar] = useState (false);
   const [showMessage, setShowMessage] = useState(false);
   
   const handleLogin = (username, password) => {
@@ -72,6 +78,9 @@ function App() {
     setShowAccount(false);
     setShowListStudent(false);
     setShowListDriver(false);
+    setShowListBus(false);
+    setShowListRoute(false);
+    setShowManageCalendar(false);
     setShowMessage(false);
   }
 
@@ -116,16 +125,52 @@ function App() {
     setShowAccount(true);
     setShowListStudent(false);
     setShowListDriver(false);
+    setShowListBus(false);
+    setShowListRoute(false);
+    setShowManageCalendar(false);
     setShowMessage(false);
   }
   const showViewListStudent = ()=>{
     setShowListStudent(true);
     setShowAccount(false);
     setShowListDriver(false);
+    setShowListBus(false);
+    setShowListRoute(false);
+    setShowManageCalendar(false);
     setShowMessage(false);
   }
   const showViewListDriver = ()=>{
     setShowListDriver(true);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowListBus(false);
+    setShowListRoute(false);
+    setShowManageCalendar(false);
+    setShowMessage(false);
+  }
+  const showViewListBus = ()=>{
+    setShowListBus(true);
+    setShowListDriver(false);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowListRoute(false);
+    setShowManageCalendar(false);
+    setShowMessage(false);
+  }
+  const showViewListRoute = ()=>{
+    setShowListRoute(true);
+    setShowListBus(false);
+    setShowListDriver(false);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowManageCalendar(false);
+    setShowMessage(false);
+  }
+  const showViewManageCalendar = ()=>{
+    setShowManageCalendar(true);
+    setShowListRoute(false);
+    setShowListBus(false);
+    setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
     setShowMessage(false);
@@ -135,6 +180,9 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListRoute(false);
+    setShowListBus(false);
+    setShowManageCalendar(false);
   }
 
   return (
@@ -164,6 +212,9 @@ function App() {
           onManageAcc={showViewAcc}
           onListStudents={showViewListStudent}
           onListDrivers={showViewListDriver}
+          onListBuses={showViewListBus}
+          onListRoutes={showViewListRoute}
+          onManageCalendar={showViewManageCalendar}
           onMessage={showViewMessage}
         />
 
@@ -200,6 +251,15 @@ function App() {
 
           {/* Popup List Driver */}
           {showListDriver && (<ADListDrivers/>)}
+
+          {/* Popup List Bus */}
+          {showListBus && (<ADListBus/>)}
+
+          {/* Popup List Route */}
+          {showListRoute && (<ADListRoute/>)}
+
+          {/* Popup Manage Calendar */}
+          {showManageCalendar && (<ADManageCalendar/>)}
 
           {/* Popup Message */}
           {showMessage && (<ADMessage/>)}
