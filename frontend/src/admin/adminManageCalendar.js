@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "../stylecss/adminManageCalendar.css";
 
-function ADManageCalendar() {
+function ADManageCalendar({onCreateCalendar}) {
   return (
     <div className="calendar-container">
       <h2 className="calendar-title">📅 Lịch Hôm Nay</h2>
+
+      <button className="create-calendar-btn" onClick={onCreateCalendar}>
+        ➕ Tạo Lịch Mới
+      </button>
 
       <table className="calendar-table">
         <thead>

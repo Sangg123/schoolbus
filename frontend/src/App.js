@@ -18,6 +18,7 @@ import ADMessage from "./admin/adminMessage";
 import ADListBus from "./admin/adminListBuses";
 import ADListRoute from "./admin/adminListRoutes";
 import ADManageCalendar from "./admin/adminManageCalendar";
+import ADCreateCalendar from "./admin/adminCreateCalendar";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -38,6 +39,7 @@ function App() {
   const [showListBus, setShowListBus] = useState(false);
   const [showListRoute, setShowListRoute] = useState(false);
   const [showManageCalendar, setShowManageCalendar] = useState (false);
+  const [showCreateCalendar, setShowCreateCalendar] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   
   const handleLogin = (username, password) => {
@@ -81,6 +83,7 @@ function App() {
     setShowListBus(false);
     setShowListRoute(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
 
@@ -128,6 +131,7 @@ function App() {
     setShowListBus(false);
     setShowListRoute(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
   const showViewListStudent = ()=>{
@@ -137,6 +141,7 @@ function App() {
     setShowListBus(false);
     setShowListRoute(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
   const showViewListDriver = ()=>{
@@ -146,6 +151,7 @@ function App() {
     setShowListBus(false);
     setShowListRoute(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
   const showViewListBus = ()=>{
@@ -155,6 +161,7 @@ function App() {
     setShowListStudent(false);
     setShowListRoute(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
   const showViewListRoute = ()=>{
@@ -164,10 +171,22 @@ function App() {
     setShowAccount(false);
     setShowListStudent(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
     setShowMessage(false);
   }
   const showViewManageCalendar = ()=>{
     setShowManageCalendar(true);
+    setShowListRoute(false);
+    setShowListBus(false);
+    setShowListDriver(false);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowCreateCalendar(false);
+    setShowMessage(false);
+  }
+  const showViewCreateCalendar = ()=>{
+    setShowCreateCalendar(true);
+    setShowManageCalendar(false);
     setShowListRoute(false);
     setShowListBus(false);
     setShowListDriver(false);
@@ -183,6 +202,7 @@ function App() {
     setShowListRoute(false);
     setShowListBus(false);
     setShowManageCalendar(false);
+    setShowCreateCalendar(false);
   }
 
   return (
@@ -259,7 +279,14 @@ function App() {
           {showListRoute && (<ADListRoute/>)}
 
           {/* Popup Manage Calendar */}
-          {showManageCalendar && (<ADManageCalendar/>)}
+          { showManageCalendar && (<ADManageCalendar
+            onCreateCalendar={showViewCreateCalendar}
+          />)}
+          
+          {/* Popup Create Calendar */}
+          {showCreateCalendar && (<ADCreateCalendar
+            onBackManageCalendar={showViewManageCalendar}
+          />)}
 
           {/* Popup Message */}
           {showMessage && (<ADMessage/>)}

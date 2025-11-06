@@ -7,8 +7,10 @@
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   font-family: "Segoe UI", sans-serif;
+  position: relative;
 }
 
+/* ===== Tiêu đề ===== */
 .calendar-title {
   text-align: center;
   color: #333;
@@ -16,18 +18,36 @@
   margin-bottom: 20px;
 }
 
-.calendar-subtitle {
-  color: #007bff;
-  font-size: 18px;
-  margin-top: 30px;
-  margin-bottom: 10px;
+/* ===== Nút tạo lịch mới ===== */
+.create-calendar-btn {
+  position: absolute;
+  top: 30px;
+  right: 60px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
+.create-calendar-btn:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+/* ===== Bảng lịch ===== */
 .calendar-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 15px;
   background-color: #fafafa;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .calendar-table th {
@@ -47,6 +67,7 @@
   background-color: #f1f1f1;
 }
 
+/* ===== Nút cập nhật ===== */
 .update-btn {
   background-color: #17a2b8;
   color: white;
@@ -62,6 +83,15 @@
   background-color: #138496;
 }
 
+/* ===== Phần chi tiết lộ trình ===== */
 .calendar-section {
-  margin-top: 30px;
+  margin-top: 40px;
+  border-top: 2px dashed #ddd;
+  padding-top: 20px;
+}
+
+.calendar-subtitle {
+  color: #007bff;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
