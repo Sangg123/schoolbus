@@ -13,6 +13,10 @@ import { DriverModule } from './modules/driver/driver.module';
 import { ParentModule } from './modules/parent/parent.module';
 import { StudentModule } from './modules/student/student.module';
 import { UsersModule } from './modules/users/users.module';
+import { ParentStudentModule } from './modules/parent-student/parent-student.module';
+import { BusModule } from './modules/bus/bus.module';
+import { RouteModule } from './modules/route/route.module';
+import { StopPointModule } from './modules/stop-point/stop-point.module';
 
 @Module({
   imports: [
@@ -34,6 +38,10 @@ import { UsersModule } from './modules/users/users.module';
     DriverModule,
     ParentModule,
     StudentModule,
+    ParentStudentModule,
+    BusModule,
+    RouteModule,
+    StopPointModule,
   ],
   controllers: [AppController],
   providers: [
