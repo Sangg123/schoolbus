@@ -69,13 +69,15 @@ model Student {
 }
 
 model ParentStudent {
+  id            Int        @id @default(autoincrement())
   parentId  Int
   studentId Int
+  relationship String?
   
   parent  Parent  @relation(fields: [parentId], references: [id], onDelete: Cascade)
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   
-  @@id([parentId, studentId])
+  @@unique([parentId, studentId])
 }
 
 model Bus {
