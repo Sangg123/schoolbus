@@ -18,6 +18,7 @@ import { BusModule } from './modules/bus/bus.module';
 import { RouteModule } from './modules/route/route.module';
 import { StopPointModule } from './modules/stop-point/stop-point.module';
 import { StudentScheduleModule } from './modules/student-schedule/student-schedule.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { StudentScheduleModule } from './modules/student-schedule/student-schedu
     BusModule,
     RouteModule,
     StopPointModule,
+    ScheduleModule,
     StudentScheduleModule,
   ],
   controllers: [AppController],
