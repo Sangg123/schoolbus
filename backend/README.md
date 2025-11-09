@@ -11,24 +11,24 @@ This project includes a batch script to run PostgreSQL on-demand without install
 ### 🔧 Configure PostgreSQL
 
 1. Download the PostgreSQL binaries from [EnterpriseDB](https://www.enterprisedb.com/download-postgresql-binaries).
-2. Extract them into:
+2. Extract them into the following path:
    ```
    external-tools/postgres/postgresql-18.0-2-windows-x64-binaries/pgsql
    ```
-3. Ensure the folder structure matches the expected path in `start-postgres.bat`.
+3. Ensure the folder structure matches the expected path used in `start-postgres.bat`.
 
 ### ▶️ Start PostgreSQL
 
-Run the following script from your project root:
+From your project root, run:
 
 ```bash
 start-postgres.bat
 ```
 
-- On first run, it will initialize the data directory.
+- On first run, it initializes the data directory.
 - PostgreSQL runs in the foreground; close the command window to stop it.
 
-> 💡 Automatically creates the schoolbus database if it doesn't exist.
+> 💡 Automatically creates the `schoolbus` database if it doesn't exist.
 
 ---
 
@@ -50,7 +50,7 @@ DATABASE_URL="postgresql://postgres:PASSWORD@localhost:5432/schoolbus?schema=pub
 
 ## 🧪 3. Migrate and Seed the Database
 
-Run the following command to apply Prisma migrations and seed the database:
+Apply Prisma migrations and seed the database:
 
 ```bash
 yarn db:setup
@@ -63,26 +63,48 @@ This will:
 
 ---
 
-## 🚦 4. Start the NestJS Backend
+## 🧬 4. Generate Prisma Types
 
-Now start the backend server:
+Generate TypeScript types from your Prisma schema:
+
+```bash
+yarn prisma:generate
+```
+
+This ensures your application has up-to-date Prisma client types.
+
+---
+
+## 🚦 5. Start the NestJS Backend
+
+Launch the backend server:
 
 ```bash
 yarn start:dev
 ```
 
-Your NestJS app will launch and connect to your configured PostgreSQL database.
+Your NestJS app will start and connect to your configured PostgreSQL database.
 
 ---
 
 ## ✅ Summary
 
-| Step | Command                | Purpose                       |
-| ---- | ---------------------- | ----------------------------- |
-| 1    | `start-postgres.bat`   | Start PostgreSQL locally      |
-| 2    | `cp .env.example .env` | Set up environment variables  |
-| 3    | `yarn db:setup`        | Migrate and seed the database |
-| 4    | `yarn start:dev`       | Start NestJS backend          |
+| Step | Command                | Purpose                          |
+| ---- | ---------------------- | -------------------------------- |
+| 1    | `start-postgres.bat`   | Start PostgreSQL locally         |
+| 2    | `cp .env.example .env` | Set up environment variables     |
+| 3    | `yarn db:setup`        | Migrate and seed the database    |
+| 4    | `yarn prisma:generate` | Generate Prisma TypeScript types |
+| 5    | `yarn start:dev`       | Start NestJS backend             |
+
+---
+
+## 📚 Additional Notes
+
+- Prisma reads the connection string from `.env` via `env("DATABASE_URL")` in `schema.prisma`.
+- The Prisma client is generated in `generated/prisma`.
+- PostgreSQL runs as a foreground process. To stop it, close the command prompt window.
+- The `schoolbus` database is created automatically if missing.
 
 ---
 
