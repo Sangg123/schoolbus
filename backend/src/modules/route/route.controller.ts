@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { RouteService } from './route.service';
-import { CreateRouteDto } from './dto/create-route.dto';
-import { UpdateRouteDto } from './dto/update-route.dto';
-import { QueryRouteDto } from './dto/query-route.dto';
-import { PaginatedQueryRouteDto } from './dto/paginated-query-route.dto';
-import { RouteResponseDto } from './dto/route-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateRouteDto } from './dto/create-route.dto';
 import { PageableRouteResponseDto } from './dto/pageable-route-response.dto';
+import { PaginatedQueryRouteDto } from './dto/paginated-query-route.dto';
+import { QueryRouteDto } from './dto/query-route.dto';
+import { RouteResponseDto } from './dto/route-response.dto';
+import { UpdateRouteDto } from './dto/update-route.dto';
+import { RouteService } from './route.service';
 
 @ApiTags('route')
 @ApiBearerAuth()

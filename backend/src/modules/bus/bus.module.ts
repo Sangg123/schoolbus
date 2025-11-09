@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { BusService } from './bus.service';
 import { BusController } from './bus.controller';
 import { BusRepository } from './bus.repository';
+import { BusService } from './bus.service';
 
 @Module({
   controllers: [BusController],

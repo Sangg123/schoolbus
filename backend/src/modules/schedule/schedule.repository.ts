@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma, Schedule } from '@prisma/client';
 import { PrismaService } from '../../core/prisma/prisma.service';
 import { BaseRepository } from '../../core/repositories/base.repository';
-import { Schedule, Prisma } from '@prisma/client';
 
 @Injectable()
 export class ScheduleRepository extends BaseRepository<

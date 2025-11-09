@@ -1,16 +1,12 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { BusRepository } from './bus.repository';
-import { CreateBusDto } from './dto/create-bus.dto';
-import { UpdateBusDto } from './dto/update-bus.dto';
-import { BusResponseDto } from './dto/bus-response.dto';
-import { QueryBusDto } from './dto/query-bus.dto';
-import { PaginatedQueryBusDto } from './dto/paginated-query-bus.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { BusRepository } from './bus.repository';
+import { BusResponseDto } from './dto/bus-response.dto';
+import { CreateBusDto } from './dto/create-bus.dto';
 import { PageableBusResponseDto } from './dto/pageable-bus-response.dto';
+import { PaginatedQueryBusDto } from './dto/paginated-query-bus.dto';
+import { QueryBusDto } from './dto/query-bus.dto';
+import { UpdateBusDto } from './dto/update-bus.dto';
 
 @Injectable()
 export class BusService {
@@ -58,7 +54,10 @@ export class BusService {
     return BusResponseDto.fromBus(bus);
   }
 
-  async update(id: number, updateBusDto: UpdateBusDto): Promise<BusResponseDto> {
+  async update(
+    id: number,
+    updateBusDto: UpdateBusDto,
+  ): Promise<BusResponseDto> {
     const bus = await this.busRepository.findById(id);
     if (!bus) {
       throw new NotFoundException(`Bus with ID ${id} not found`);
@@ -85,7 +84,10 @@ export class BusService {
     const filter: Prisma.BusWhereInput = {};
 
     if (query.licensePlate) {
-      filter.licensePlate = { contains: query.licensePlate, mode: 'insensitive' };
+      filter.licensePlate = {
+        contains: query.licensePlate,
+        mode: 'insensitive',
+      };
     }
 
     if (query.capacity) {

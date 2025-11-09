@@ -1,22 +1,20 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { ScheduleRepository } from './schedule.repository';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
-import { ScheduleResponseDto } from './dto/schedule-response.dto';
-import { QueryScheduleDto } from './dto/query-schedule.dto';
-import { PaginatedQueryScheduleDto } from './dto/paginated-query-schedule.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { PageableScheduleResponseDto } from './dto/pageable-schedule-response.dto';
+import { PaginatedQueryScheduleDto } from './dto/paginated-query-schedule.dto';
+import { QueryScheduleDto } from './dto/query-schedule.dto';
+import { ScheduleResponseDto } from './dto/schedule-response.dto';
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { ScheduleRepository } from './schedule.repository';
 
 @Injectable()
 export class ScheduleService {
   constructor(private readonly scheduleRepository: ScheduleRepository) {}
 
-  async create(createScheduleDto: CreateScheduleDto): Promise<ScheduleResponseDto> {
+  async create(
+    createScheduleDto: CreateScheduleDto,
+  ): Promise<ScheduleResponseDto> {
     const schedule = await this.scheduleRepository.create({
       route: {
         connect: {
@@ -82,21 +80,27 @@ export class ScheduleService {
     }
 
     const updatedSchedule = await this.scheduleRepository.update(id, {
-      route: updateScheduleDto.routeId ? {
-        connect: {
-          id: updateScheduleDto.routeId,
-        },
-      } : undefined,
-      bus: updateScheduleDto.busId ? {
-        connect: {
-          id: updateScheduleDto.busId,
-        },
-      } : undefined,
-      driver: updateScheduleDto.driverId ? {
-        connect: {
-          id: updateScheduleDto.driverId,
-        },
-      } : undefined,
+      route: updateScheduleDto.routeId
+        ? {
+            connect: {
+              id: updateScheduleDto.routeId,
+            },
+          }
+        : undefined,
+      bus: updateScheduleDto.busId
+        ? {
+            connect: {
+              id: updateScheduleDto.busId,
+            },
+          }
+        : undefined,
+      driver: updateScheduleDto.driverId
+        ? {
+            connect: {
+              id: updateScheduleDto.driverId,
+            },
+          }
+        : undefined,
       dayOfWeek: updateScheduleDto.dayOfWeek,
       startTime: updateScheduleDto.startTime,
       endTime: updateScheduleDto.endTime,

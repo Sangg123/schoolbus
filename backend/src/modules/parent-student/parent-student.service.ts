@@ -1,22 +1,22 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { ParentStudentRepository } from './parent-student.repository';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { CreateParentStudentDto } from './dto/create-parent-student.dto';
-import { UpdateParentStudentDto } from './dto/update-parent-student.dto';
+import { PageableParentStudentResponseDto } from './dto/pageable-parent-student-response.dto';
+import { PaginatedQueryParentStudentDto } from './dto/paginated-query-parent-student.dto';
 import { ParentStudentResponseDto } from './dto/parent-student-response.dto';
 import { QueryParentStudentDto } from './dto/query-parent-student.dto';
-import { PaginatedQueryParentStudentDto } from './dto/paginated-query-parent-student.dto';
-import { Prisma } from '@prisma/client';
-import { PageableParentStudentResponseDto } from './dto/pageable-parent-student-response.dto';
+import { UpdateParentStudentDto } from './dto/update-parent-student.dto';
+import { ParentStudentRepository } from './parent-student.repository';
 
 @Injectable()
 export class ParentStudentService {
-  constructor(private readonly parentStudentRepository: ParentStudentRepository) {}
+  constructor(
+    private readonly parentStudentRepository: ParentStudentRepository,
+  ) {}
 
-  async create(createParentStudentDto: CreateParentStudentDto): Promise<ParentStudentResponseDto> {
+  async create(
+    createParentStudentDto: CreateParentStudentDto,
+  ): Promise<ParentStudentResponseDto> {
     const parentStudent = await this.parentStudentRepository.create({
       parent: {
         connect: {
@@ -33,9 +33,12 @@ export class ParentStudentService {
     return ParentStudentResponseDto.fromParentStudent(parentStudent);
   }
 
-  async findAll(query: QueryParentStudentDto): Promise<ParentStudentResponseDto[]> {
+  async findAll(
+    query: QueryParentStudentDto,
+  ): Promise<ParentStudentResponseDto[]> {
     const filter = this.buildFilter(query);
-    const parentStudents = await this.parentStudentRepository.findByFilter(filter);
+    const parentStudents =
+      await this.parentStudentRepository.findByFilter(filter);
     return parentStudents.map(ParentStudentResponseDto.fromParentStudent);
   }
 
@@ -46,10 +49,11 @@ export class ParentStudentService {
     const filter = this.buildFilter(filterData);
     const pagination = { page, limit, sortBy, sortOrder };
 
-    const result = await this.parentStudentRepository.findByFilterWithPagination(
-      filter,
-      pagination,
-    );
+    const result =
+      await this.parentStudentRepository.findByFilterWithPagination(
+        filter,
+        pagination,
+      );
 
     return {
       ...result,
@@ -75,16 +79,20 @@ export class ParentStudentService {
     }
 
     const updatedParentStudent = await this.parentStudentRepository.update(id, {
-      parent: updateParentStudentDto.parentId ? {
-        connect: {
-          id: updateParentStudentDto.parentId,
-        },
-      } : undefined,
-      student: updateParentStudentDto.studentId ? {
-        connect: {
-          id: updateParentStudentDto.studentId,
-        },
-      } : undefined,
+      parent: updateParentStudentDto.parentId
+        ? {
+            connect: {
+              id: updateParentStudentDto.parentId,
+            },
+          }
+        : undefined,
+      student: updateParentStudentDto.studentId
+        ? {
+            connect: {
+              id: updateParentStudentDto.studentId,
+            },
+          }
+        : undefined,
       relationship: updateParentStudentDto.relationship,
     });
     return ParentStudentResponseDto.fromParentStudent(updatedParentStudent);
@@ -98,7 +106,9 @@ export class ParentStudentService {
     await this.parentStudentRepository.delete(id);
   }
 
-  private buildFilter(query: QueryParentStudentDto): Prisma.ParentStudentWhereInput {
+  private buildFilter(
+    query: QueryParentStudentDto,
+  ): Prisma.ParentStudentWhereInput {
     const filter: Prisma.ParentStudentWhereInput = {};
 
     if (query.parentId) {
@@ -110,7 +120,10 @@ export class ParentStudentService {
     }
 
     if (query.relationship) {
-      filter.relationship = { contains: query.relationship, mode: 'insensitive' };
+      filter.relationship = {
+        contains: query.relationship,
+        mode: 'insensitive',
+      };
     }
 
     if (query.parentName) {

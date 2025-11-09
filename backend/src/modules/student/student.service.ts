@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { PageableStudentResponseDto } from './dto/pageable-student-response.dto';
@@ -15,7 +12,9 @@ import { StudentRepository } from './student.repository';
 export class StudentService {
   constructor(private readonly studentRepository: StudentRepository) {}
 
-  async create(createStudentDto: CreateStudentDto): Promise<StudentResponseDto> {
+  async create(
+    createStudentDto: CreateStudentDto,
+  ): Promise<StudentResponseDto> {
     const student = await this.studentRepository.create({
       fullName: createStudentDto.fullName,
       class: createStudentDto.class,

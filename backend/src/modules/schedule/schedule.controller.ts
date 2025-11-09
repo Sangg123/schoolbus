@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ScheduleService } from './schedule.service';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
-import { QueryScheduleDto } from './dto/query-schedule.dto';
-import { PaginatedQueryScheduleDto } from './dto/paginated-query-schedule.dto';
-import { ScheduleResponseDto } from './dto/schedule-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { PageableScheduleResponseDto } from './dto/pageable-schedule-response.dto';
+import { PaginatedQueryScheduleDto } from './dto/paginated-query-schedule.dto';
+import { QueryScheduleDto } from './dto/query-schedule.dto';
+import { ScheduleResponseDto } from './dto/schedule-response.dto';
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { ScheduleService } from './schedule.service';
 
 @ApiTags('schedule')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class ScheduleController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update schedule' })
   @ApiResponse({ status: 200, type: ScheduleResponseDto })
-  update(@Param('id') id: string, @Body() updateScheduleDto: UpdateScheduleDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateScheduleDto: UpdateScheduleDto,
+  ) {
     return this.scheduleService.update(+id, updateScheduleDto);
   }
 

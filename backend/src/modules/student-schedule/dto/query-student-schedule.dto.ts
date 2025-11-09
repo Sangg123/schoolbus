@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsInt, IsString, IsEnum } from 'class-validator';
-import { TripType } from '@prisma/client';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class QueryStudentScheduleDto {
   @ApiPropertyOptional()

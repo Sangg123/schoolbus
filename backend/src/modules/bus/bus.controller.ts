@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { BusService } from './bus.service';
-import { CreateBusDto } from './dto/create-bus.dto';
-import { UpdateBusDto } from './dto/update-bus.dto';
-import { QueryBusDto } from './dto/query-bus.dto';
-import { PaginatedQueryBusDto } from './dto/paginated-query-bus.dto';
-import { BusResponseDto } from './dto/bus-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { BusService } from './bus.service';
+import { BusResponseDto } from './dto/bus-response.dto';
+import { CreateBusDto } from './dto/create-bus.dto';
 import { PageableBusResponseDto } from './dto/pageable-bus-response.dto';
+import { PaginatedQueryBusDto } from './dto/paginated-query-bus.dto';
+import { QueryBusDto } from './dto/query-bus.dto';
+import { UpdateBusDto } from './dto/update-bus.dto';
 
 @ApiTags('bus')
 @ApiBearerAuth()

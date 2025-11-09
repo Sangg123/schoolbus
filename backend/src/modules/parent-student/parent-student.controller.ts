@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ParentStudentService } from './parent-student.service';
+import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
 import { CreateParentStudentDto } from './dto/create-parent-student.dto';
-import { UpdateParentStudentDto } from './dto/update-parent-student.dto';
-import { QueryParentStudentDto } from './dto/query-parent-student.dto';
+import { PageableParentStudentResponseDto } from './dto/pageable-parent-student-response.dto';
 import { PaginatedQueryParentStudentDto } from './dto/paginated-query-parent-student.dto';
 import { ParentStudentResponseDto } from './dto/parent-student-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
-import { UserRoleEnum } from 'src/core/enums/user-role.enum';
-import { PageableParentStudentResponseDto } from './dto/pageable-parent-student-response.dto';
+import { QueryParentStudentDto } from './dto/query-parent-student.dto';
+import { UpdateParentStudentDto } from './dto/update-parent-student.dto';
+import { ParentStudentService } from './parent-student.service';
 
 @ApiTags('parent-student')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class ParentStudentController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update parent-student relation' })
   @ApiResponse({ status: 200, type: ParentStudentResponseDto })
-  update(@Param('id') id: string, @Body() updateParentStudentDto: UpdateParentStudentDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateParentStudentDto: UpdateParentStudentDto,
+  ) {
     return this.parentStudentService.update(+id, updateParentStudentDto);
   }
 

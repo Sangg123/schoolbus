@@ -17,7 +17,9 @@ export class StudentScheduleResponseDto {
   @ApiPropertyOptional({ nullable: true })
   dropoffStopId: number | null;
 
-  static fromStudentSchedule(studentSchedule: StudentSchedule): StudentScheduleResponseDto {
+  static fromStudentSchedule(
+    studentSchedule: StudentSchedule,
+  ): StudentScheduleResponseDto {
     const dto = new StudentScheduleResponseDto();
     dto.id = studentSchedule.id;
     dto.studentId = studentSchedule.studentId;

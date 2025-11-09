@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { ParentStudentService } from './parent-student.service';
 import { ParentStudentController } from './parent-student.controller';
 import { ParentStudentRepository } from './parent-student.repository';
+import { ParentStudentService } from './parent-student.service';
 
 @Module({
   controllers: [ParentStudentController],

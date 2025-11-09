@@ -9,16 +9,16 @@ import { RolesGuard } from './core/guards/roles.guard';
 import { PrismaModule } from './core/prisma/prisma.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { DriverModule } from './modules/driver/driver.module';
-import { ParentModule } from './modules/parent/parent.module';
-import { StudentModule } from './modules/student/student.module';
-import { UsersModule } from './modules/users/users.module';
-import { ParentStudentModule } from './modules/parent-student/parent-student.module';
 import { BusModule } from './modules/bus/bus.module';
+import { DriverModule } from './modules/driver/driver.module';
+import { ParentStudentModule } from './modules/parent-student/parent-student.module';
+import { ParentModule } from './modules/parent/parent.module';
 import { RouteModule } from './modules/route/route.module';
+import { ScheduleModule } from './modules/schedule/schedule.module';
 import { StopPointModule } from './modules/stop-point/stop-point.module';
 import { StudentScheduleModule } from './modules/student-schedule/student-schedule.module';
-import { ScheduleModule } from './modules/schedule/schedule.module';
+import { StudentModule } from './modules/student/student.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [

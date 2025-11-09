@@ -1,16 +1,12 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { RouteRepository } from './route.repository';
-import { CreateRouteDto } from './dto/create-route.dto';
-import { UpdateRouteDto } from './dto/update-route.dto';
-import { RouteResponseDto } from './dto/route-response.dto';
-import { QueryRouteDto } from './dto/query-route.dto';
-import { PaginatedQueryRouteDto } from './dto/paginated-query-route.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateRouteDto } from './dto/create-route.dto';
 import { PageableRouteResponseDto } from './dto/pageable-route-response.dto';
+import { PaginatedQueryRouteDto } from './dto/paginated-query-route.dto';
+import { QueryRouteDto } from './dto/query-route.dto';
+import { RouteResponseDto } from './dto/route-response.dto';
+import { UpdateRouteDto } from './dto/update-route.dto';
+import { RouteRepository } from './route.repository';
 
 @Injectable()
 export class RouteService {
@@ -56,7 +52,10 @@ export class RouteService {
     return RouteResponseDto.fromRoute(route);
   }
 
-  async update(id: number, updateRouteDto: UpdateRouteDto): Promise<RouteResponseDto> {
+  async update(
+    id: number,
+    updateRouteDto: UpdateRouteDto,
+  ): Promise<RouteResponseDto> {
     const route = await this.routeRepository.findById(id);
     if (!route) {
       throw new NotFoundException(`Route with ID ${id} not found`);

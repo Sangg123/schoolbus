@@ -1,22 +1,20 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { StopPointRepository } from './stop-point.repository';
-import { CreateStopPointDto } from './dto/create-stop-point.dto';
-import { UpdateStopPointDto } from './dto/update-stop-point.dto';
-import { StopPointResponseDto } from './dto/stop-point-response.dto';
-import { QueryStopPointDto } from './dto/query-stop-point.dto';
-import { PaginatedQueryStopPointDto } from './dto/paginated-query-stop-point.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateStopPointDto } from './dto/create-stop-point.dto';
 import { PageableStopPointResponseDto } from './dto/pageable-stop-point-response.dto';
+import { PaginatedQueryStopPointDto } from './dto/paginated-query-stop-point.dto';
+import { QueryStopPointDto } from './dto/query-stop-point.dto';
+import { StopPointResponseDto } from './dto/stop-point-response.dto';
+import { UpdateStopPointDto } from './dto/update-stop-point.dto';
+import { StopPointRepository } from './stop-point.repository';
 
 @Injectable()
 export class StopPointService {
   constructor(private readonly stopPointRepository: StopPointRepository) {}
 
-  async create(createStopPointDto: CreateStopPointDto): Promise<StopPointResponseDto> {
+  async create(
+    createStopPointDto: CreateStopPointDto,
+  ): Promise<StopPointResponseDto> {
     const stopPoint = await this.stopPointRepository.create({
       name: createStopPointDto.name,
       address: createStopPointDto.address,
@@ -58,7 +56,10 @@ export class StopPointService {
     return StopPointResponseDto.fromStopPoint(stopPoint);
   }
 
-  async update(id: number, updateStopPointDto: UpdateStopPointDto): Promise<StopPointResponseDto> {
+  async update(
+    id: number,
+    updateStopPointDto: UpdateStopPointDto,
+  ): Promise<StopPointResponseDto> {
     const stopPoint = await this.stopPointRepository.findById(id);
     if (!stopPoint) {
       throw new NotFoundException(`StopPoint with ID ${id} not found`);

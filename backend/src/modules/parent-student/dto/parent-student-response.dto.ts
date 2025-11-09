@@ -14,7 +14,9 @@ export class ParentStudentResponseDto {
   @ApiPropertyOptional({ nullable: true })
   relationship: string | null;
 
-  static fromParentStudent(parentStudent: ParentStudent): ParentStudentResponseDto {
+  static fromParentStudent(
+    parentStudent: ParentStudent,
+  ): ParentStudentResponseDto {
     const dto = new ParentStudentResponseDto();
     dto.id = parentStudent.id;
     dto.parentId = parentStudent.parentId;

@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { StopPointService } from './stop-point.service';
-import { CreateStopPointDto } from './dto/create-stop-point.dto';
-import { UpdateStopPointDto } from './dto/update-stop-point.dto';
-import { QueryStopPointDto } from './dto/query-stop-point.dto';
-import { PaginatedQueryStopPointDto } from './dto/paginated-query-stop-point.dto';
-import { StopPointResponseDto } from './dto/stop-point-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRole } from '@prisma/client';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateStopPointDto } from './dto/create-stop-point.dto';
 import { PageableStopPointResponseDto } from './dto/pageable-stop-point-response.dto';
+import { PaginatedQueryStopPointDto } from './dto/paginated-query-stop-point.dto';
+import { QueryStopPointDto } from './dto/query-stop-point.dto';
+import { StopPointResponseDto } from './dto/stop-point-response.dto';
+import { UpdateStopPointDto } from './dto/update-stop-point.dto';
+import { StopPointService } from './stop-point.service';
 
 @ApiTags('stop-point')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class StopPointController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update stop point' })
   @ApiResponse({ status: 200, type: StopPointResponseDto })
-  update(@Param('id') id: string, @Body() updateStopPointDto: UpdateStopPointDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateStopPointDto: UpdateStopPointDto,
+  ) {
     return this.stopPointService.update(+id, updateStopPointDto);
   }
 
