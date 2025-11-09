@@ -133,8 +133,8 @@ model Schedule {
   busId      Int
   driverId   Int
   dayOfWeek  Int
-  tripType   TripType
   startTime  DateTime
+  endTime DateTime
   
   route    Route            @relation(fields: [routeId], references: [id])
   bus      Bus              @relation(fields: [busId], references: [id])
@@ -142,7 +142,7 @@ model Schedule {
   trips    Trip[]
   students StudentSchedule[]
   
-  @@unique([routeId, dayOfWeek, tripType])
+  @@unique([routeId, dayOfWeek])
 }
 
 model StudentSchedule {
