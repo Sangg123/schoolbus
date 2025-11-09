@@ -21,13 +21,13 @@ import { QueryParentStudentDto } from './dto/query-parent-student.dto';
 import { PaginatedQueryParentStudentDto } from './dto/paginated-query-parent-student.dto';
 import { ParentStudentResponseDto } from './dto/parent-student-response.dto';
 import { Roles } from '../../core/decorators/roles.decorator';
-import { UserRole } from '@prisma/client';
+import { UserRoleEnum } from 'src/core/enums/user-role.enum';
 import { PageableParentStudentResponseDto } from './dto/pageable-parent-student-response.dto';
 
 @ApiTags('parent-student')
 @ApiBearerAuth()
 @Controller('parent-student')
-@Roles(UserRole.admin)
+@Roles(UserRoleEnum.admin)
 export class ParentStudentController {
   constructor(private readonly parentStudentService: ParentStudentService) {}
 
@@ -52,33 +52,23 @@ export class ParentStudentController {
     return this.parentStudentService.findAllWithPagination(query);
   }
 
-  @Get(':parentId/:studentId')
-  @ApiOperation({ summary: 'Get parent-student relation by IDs' })
+  @Get(':id')
+  @ApiOperation({ summary: 'Get parent-student relation by ID' })
   @ApiResponse({ status: 200, type: ParentStudentResponseDto })
-  findOne(
-    @Param('parentId') parentId: string,
-    @Param('studentId') studentId: string,
-  ) {
-    return this.parentStudentService.findOne(+parentId, +studentId);
+  findOne(@Param('id') id: string) {
+    return this.parentStudentService.findOne(+id);
   }
 
-  @Patch(':parentId/:studentId')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update parent-student relation' })
   @ApiResponse({ status: 200, type: ParentStudentResponseDto })
-  update(
-    @Param('parentId') parentId: string,
-    @Param('studentId') studentId: string,
-    @Body() updateParentStudentDto: UpdateParentStudentDto,
-  ) {
-    return this.parentStudentService.update(+parentId, +studentId, updateParentStudentDto);
+  update(@Param('id') id: string, @Body() updateParentStudentDto: UpdateParentStudentDto) {
+    return this.parentStudentService.update(+id, updateParentStudentDto);
   }
 
-  @Delete(':parentId/:studentId')
+  @Delete(':id')
   @ApiOperation({ summary: 'Delete parent-student relation' })
-  remove(
-    @Param('parentId') parentId: string,
-    @Param('studentId') studentId: string,
-  ) {
-    return this.parentStudentService.remove(+parentId, +studentId);
+  remove(@Param('id') id: string) {
+    return this.parentStudentService.remove(+id);
   }
 }

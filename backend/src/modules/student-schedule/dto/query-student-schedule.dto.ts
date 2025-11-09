@@ -33,8 +33,8 @@ export class QueryStudentScheduleDto {
   @IsInt()
   scheduleDayOfWeek?: number;
 
-  @ApiPropertyOptional({ enum: TripType })
-  @IsOptional()
-  @IsEnum(TripType)
-  scheduleTripType?: TripType;
+  // @ApiPropertyOptional({ enum: TripType })
+  // @IsOptional()
+  // @IsEnum(TripType)
+  // scheduleTripType?: TripType;
 }

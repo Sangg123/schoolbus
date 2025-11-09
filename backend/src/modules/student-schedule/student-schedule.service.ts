@@ -147,12 +147,12 @@ export class StudentScheduleService {
       };
     }
 
-    if (query.scheduleTripType) {
-      filter.schedule = {
-        ...filter.schedule,
-        tripType: query.scheduleTripType,
-      };
-    }
+    // if (query.scheduleTripType) {
+    //   filter.schedule = {
+    //     ...filter.schedule,
+    //     tripType: query.scheduleTripType,
+    //   };
+    // }
 
     return filter;
   }

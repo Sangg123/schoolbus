@@ -15,6 +15,11 @@ export class QueryParentStudentDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  relationship?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
   parentName?: string;
 
   @ApiPropertyOptional()

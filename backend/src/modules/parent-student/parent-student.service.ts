@@ -28,6 +28,7 @@ export class ParentStudentService {
           id: createParentStudentDto.studentId,
         },
       },
+      relationship: createParentStudentDto.relationship,
     });
     return ParentStudentResponseDto.fromParentStudent(parentStudent);
   }
@@ -56,48 +57,45 @@ export class ParentStudentService {
     };
   }
 
-  async findOne(parentId: number, studentId: number): Promise<ParentStudentResponseDto> {
-    const parentStudent = await this.parentStudentRepository.findById({ parentId, studentId });
+  async findOne(id: number): Promise<ParentStudentResponseDto> {
+    const parentStudent = await this.parentStudentRepository.findById(id);
     if (!parentStudent) {
-      throw new NotFoundException(`ParentStudent relation not found`);
+      throw new NotFoundException(`ParentStudent with ID ${id} not found`);
     }
     return ParentStudentResponseDto.fromParentStudent(parentStudent);
   }
 
   async update(
-    parentId: number,
-    studentId: number,
+    id: number,
     updateParentStudentDto: UpdateParentStudentDto,
   ): Promise<ParentStudentResponseDto> {
-    const parentStudent = await this.parentStudentRepository.findById({ parentId, studentId });
+    const parentStudent = await this.parentStudentRepository.findById(id);
     if (!parentStudent) {
-      throw new NotFoundException(`ParentStudent relation not found`);
+      throw new NotFoundException(`ParentStudent with ID ${id} not found`);
     }
 
-    const updatedParentStudent = await this.parentStudentRepository.update(
-      { parentId, studentId },
-      {
-        parent: updateParentStudentDto.parentId ? {
-          connect: {
-            id: updateParentStudentDto.parentId,
-          },
-        } : undefined,
-        student: updateParentStudentDto.studentId ? {
-          connect: {
-            id: updateParentStudentDto.studentId,
-          },
-        } : undefined,
-      },
-    );
+    const updatedParentStudent = await this.parentStudentRepository.update(id, {
+      parent: updateParentStudentDto.parentId ? {
+        connect: {
+          id: updateParentStudentDto.parentId,
+        },
+      } : undefined,
+      student: updateParentStudentDto.studentId ? {
+        connect: {
+          id: updateParentStudentDto.studentId,
+        },
+      } : undefined,
+      relationship: updateParentStudentDto.relationship,
+    });
     return ParentStudentResponseDto.fromParentStudent(updatedParentStudent);
   }
 
-  async remove(parentId: number, studentId: number): Promise<void> {
-    const parentStudent = await this.parentStudentRepository.findById({ parentId, studentId });
+  async remove(id: number): Promise<void> {
+    const parentStudent = await this.parentStudentRepository.findById(id);
     if (!parentStudent) {
-      throw new NotFoundException(`ParentStudent relation not found`);
+      throw new NotFoundException(`ParentStudent with ID ${id} not found`);
     }
-    await this.parentStudentRepository.delete({ parentId, studentId });
+    await this.parentStudentRepository.delete(id);
   }
 
   private buildFilter(query: QueryParentStudentDto): Prisma.ParentStudentWhereInput {
@@ -109,6 +107,10 @@ export class ParentStudentService {
 
     if (query.studentId) {
       filter.studentId = query.studentId;
+    }
+
+    if (query.relationship) {
+      filter.relationship = { contains: query.relationship, mode: 'insensitive' };
     }
 
     if (query.parentName) {
