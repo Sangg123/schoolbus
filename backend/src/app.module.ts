@@ -19,6 +19,7 @@ import { StopPointModule } from './modules/stop-point/stop-point.module';
 import { StudentScheduleModule } from './modules/student-schedule/student-schedule.module';
 import { StudentModule } from './modules/student/student.module';
 import { UsersModule } from './modules/users/users.module';
+import { ItineraryModule } from './modules/itinerary/itinerary.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { UsersModule } from './modules/users/users.module';
     BusModule,
     RouteModule,
     StopPointModule,
+    ItineraryModule,
     ScheduleModule,
     StudentScheduleModule,
   ],
