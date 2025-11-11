@@ -20,6 +20,7 @@ import { StudentScheduleModule } from './modules/student-schedule/student-schedu
 import { StudentModule } from './modules/student/student.module';
 import { UsersModule } from './modules/users/users.module';
 import { ItineraryModule } from './modules/itinerary/itinerary.module';
+import { TripModule } from './modules/trip/trip.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { ItineraryModule } from './modules/itinerary/itinerary.module';
     ItineraryModule,
     ScheduleModule,
     StudentScheduleModule,
+    TripModule,
   ],
   controllers: [AppController],
   providers: [
