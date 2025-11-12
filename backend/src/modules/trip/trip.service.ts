@@ -119,18 +119,24 @@ export class TripService {
       };
     }
 
+    // Build schedule filter object separately
+    const scheduleFilter: Prisma.ScheduleWhereInput = {};
+
+    if (query.scheduleDayOfWeek) {
+      scheduleFilter.dayOfWeek = query.scheduleDayOfWeek;
+    }
+
     if (query.driverId) {
-      filter.schedule = {
-        ...filter.schedule,
-        driverId: query.driverId,
-      };
+      scheduleFilter.driverId = query.driverId;
     }
 
     if (query.busId) {
-      filter.schedule = {
-        ...filter.schedule,
-        busId: query.busId,
-      };
+      scheduleFilter.busId = query.busId;
+    }
+
+    // Only assign if there are any schedule filters
+    if (Object.keys(scheduleFilter).length > 0) {
+      filter.schedule = scheduleFilter;
     }
 
     return filter;
