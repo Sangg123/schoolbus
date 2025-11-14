@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { ItineraryService } from './itinerary.service';
-import { CreateItineraryDto } from './dto/create-itinerary.dto';
-import { UpdateItineraryDto } from './dto/update-itinerary.dto';
-import { QueryItineraryDto } from './dto/query-itinerary.dto';
-import { PaginatedQueryItineraryDto } from './dto/paginated-query-itinerary.dto';
-import { ItineraryResponseDto } from './dto/itinerary-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateItineraryDto } from './dto/create-itinerary.dto';
+import { ItineraryResponseDto } from './dto/itinerary-response.dto';
 import { PageableItineraryResponseDto } from './dto/pageable-itinerary-response.dto';
+import { PaginatedQueryItineraryDto } from './dto/paginated-query-itinerary.dto';
+import { QueryItineraryDto } from './dto/query-itinerary.dto';
+import { UpdateItineraryDto } from './dto/update-itinerary.dto';
+import { ItineraryService } from './itinerary.service';
 
 @ApiTags('itinerary')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class ItineraryController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update itinerary' })
   @ApiResponse({ status: 200, type: ItineraryResponseDto })
-  update(@Param('id') id: string, @Body() updateItineraryDto: UpdateItineraryDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateItineraryDto: UpdateItineraryDto,
+  ) {
     return this.itineraryService.update(+id, updateItineraryDto);
   }
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { LocationEventService } from './location-event.service';
 import { LocationEventController } from './location-event.controller';
 import { LocationEventRepository } from './location-event.repository';
+import { LocationEventService } from './location-event.service';
 
 @Module({
   controllers: [LocationEventController],

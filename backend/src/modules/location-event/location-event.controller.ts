@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { LocationEventService } from './location-event.service';
-import { CreateLocationEventDto } from './dto/create-location-event.dto';
-import { UpdateLocationEventDto } from './dto/update-location-event.dto';
-import { QueryLocationEventDto } from './dto/query-location-event.dto';
-import { PaginatedQueryLocationEventDto } from './dto/paginated-query-location-event.dto';
-import { LocationEventResponseDto } from './dto/location-event-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateLocationEventDto } from './dto/create-location-event.dto';
+import { LocationEventResponseDto } from './dto/location-event-response.dto';
 import { PageableLocationEventResponseDto } from './dto/pageable-location-event-response.dto';
+import { PaginatedQueryLocationEventDto } from './dto/paginated-query-location-event.dto';
+import { QueryLocationEventDto } from './dto/query-location-event.dto';
+import { UpdateLocationEventDto } from './dto/update-location-event.dto';
+import { LocationEventService } from './location-event.service';
 
 @ApiTags('location-event')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class LocationEventController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update location event' })
   @ApiResponse({ status: 200, type: LocationEventResponseDto })
-  update(@Param('id') id: string, @Body() updateLocationEventDto: UpdateLocationEventDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateLocationEventDto: UpdateLocationEventDto,
+  ) {
     return this.locationEventService.update(+id, updateLocationEventDto);
   }
 

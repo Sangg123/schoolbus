@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { QueryNotificationDto } from './dto/query-notification.dto';
-import { PaginatedQueryNotificationDto } from './dto/paginated-query-notification.dto';
-import { NotificationResponseDto } from './dto/notification-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateNotificationDto } from './dto/create-notification.dto';
+import { NotificationResponseDto } from './dto/notification-response.dto';
 import { PageableNotificationResponseDto } from './dto/pageable-notification-response.dto';
+import { PaginatedQueryNotificationDto } from './dto/paginated-query-notification.dto';
+import { QueryNotificationDto } from './dto/query-notification.dto';
+import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { NotificationService } from './notification.service';
 
 @ApiTags('notification')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class NotificationController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update notification' })
   @ApiResponse({ status: 200, type: NotificationResponseDto })
-  update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateNotificationDto: UpdateNotificationDto,
+  ) {
     return this.notificationService.update(+id, updateNotificationDto);
   }
 

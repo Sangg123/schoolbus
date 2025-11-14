@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { TripService } from './trip.service';
-import { CreateTripDto } from './dto/create-trip.dto';
-import { UpdateTripDto } from './dto/update-trip.dto';
-import { QueryTripDto } from './dto/query-trip.dto';
-import { PaginatedQueryTripDto } from './dto/paginated-query-trip.dto';
-import { TripResponseDto } from './dto/trip-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { CreateTripDto } from './dto/create-trip.dto';
 import { PageableTripResponseDto } from './dto/pageable-trip-response.dto';
+import { PaginatedQueryTripDto } from './dto/paginated-query-trip.dto';
+import { QueryTripDto } from './dto/query-trip.dto';
+import { TripResponseDto } from './dto/trip-response.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
+import { TripService } from './trip.service';
 
 @ApiTags('trip')
 @ApiBearerAuth()

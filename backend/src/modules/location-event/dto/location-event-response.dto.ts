@@ -29,7 +29,9 @@ export class LocationEventResponseDto {
   @ApiProperty({ enum: LocationSource })
   source: LocationSource;
 
-  static fromLocationEvent(locationEvent: LocationEvent): LocationEventResponseDto {
+  static fromLocationEvent(
+    locationEvent: LocationEvent,
+  ): LocationEventResponseDto {
     const dto = new LocationEventResponseDto();
     dto.id = locationEvent.id;
     dto.tripId = locationEvent.tripId;

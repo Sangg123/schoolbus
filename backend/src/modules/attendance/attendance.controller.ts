@@ -1,28 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
-  ApiTags,
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import { AttendanceService } from './attendance.service';
-import { CreateAttendanceDto } from './dto/create-attendance.dto';
-import { UpdateAttendanceDto } from './dto/update-attendance.dto';
-import { QueryAttendanceDto } from './dto/query-attendance.dto';
-import { PaginatedQueryAttendanceDto } from './dto/paginated-query-attendance.dto';
-import { AttendanceResponseDto } from './dto/attendance-response.dto';
-import { Roles } from '../../core/decorators/roles.decorator';
 import { UserRoleEnum } from 'src/core/enums/user-role.enum';
+import { Roles } from '../../core/decorators/roles.decorator';
+import { AttendanceService } from './attendance.service';
+import { AttendanceResponseDto } from './dto/attendance-response.dto';
+import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { PageableAttendanceResponseDto } from './dto/pageable-attendance-response.dto';
+import { PaginatedQueryAttendanceDto } from './dto/paginated-query-attendance.dto';
+import { QueryAttendanceDto } from './dto/query-attendance.dto';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 
 @ApiTags('attendance')
 @ApiBearerAuth()
@@ -62,7 +62,10 @@ export class AttendanceController {
   @Patch(':id')
   @ApiOperation({ summary: 'Update attendance' })
   @ApiResponse({ status: 200, type: AttendanceResponseDto })
-  update(@Param('id') id: string, @Body() updateAttendanceDto: UpdateAttendanceDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAttendanceDto: UpdateAttendanceDto,
+  ) {
     return this.attendanceService.update(+id, updateAttendanceDto);
   }
 

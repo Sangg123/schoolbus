@@ -1,28 +1,30 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { LocationEventRepository } from './location-event.repository';
-import { CreateLocationEventDto } from './dto/create-location-event.dto';
-import { UpdateLocationEventDto } from './dto/update-location-event.dto';
-import { LocationEventResponseDto } from './dto/location-event-response.dto';
-import { QueryLocationEventDto } from './dto/query-location-event.dto';
-import { PaginatedQueryLocationEventDto } from './dto/paginated-query-location-event.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateLocationEventDto } from './dto/create-location-event.dto';
+import { LocationEventResponseDto } from './dto/location-event-response.dto';
 import { PageableLocationEventResponseDto } from './dto/pageable-location-event-response.dto';
+import { PaginatedQueryLocationEventDto } from './dto/paginated-query-location-event.dto';
+import { QueryLocationEventDto } from './dto/query-location-event.dto';
+import { UpdateLocationEventDto } from './dto/update-location-event.dto';
+import { LocationEventRepository } from './location-event.repository';
 
 @Injectable()
 export class LocationEventService {
-  constructor(private readonly locationEventRepository: LocationEventRepository) {}
+  constructor(
+    private readonly locationEventRepository: LocationEventRepository,
+  ) {}
 
-  async create(createLocationEventDto: CreateLocationEventDto): Promise<LocationEventResponseDto> {
+  async create(
+    createLocationEventDto: CreateLocationEventDto,
+  ): Promise<LocationEventResponseDto> {
     const locationEvent = await this.locationEventRepository.create({
-      trip: createLocationEventDto.tripId ? {
-        connect: {
-          id: createLocationEventDto.tripId,
-        },
-      } : undefined,
+      trip: createLocationEventDto.tripId
+        ? {
+            connect: {
+              id: createLocationEventDto.tripId,
+            },
+          }
+        : undefined,
       bus: {
         connect: {
           id: createLocationEventDto.busId,
@@ -38,9 +40,12 @@ export class LocationEventService {
     return LocationEventResponseDto.fromLocationEvent(locationEvent);
   }
 
-  async findAll(query: QueryLocationEventDto): Promise<LocationEventResponseDto[]> {
+  async findAll(
+    query: QueryLocationEventDto,
+  ): Promise<LocationEventResponseDto[]> {
     const filter = this.buildFilter(query);
-    const locationEvents = await this.locationEventRepository.findByFilter(filter);
+    const locationEvents =
+      await this.locationEventRepository.findByFilter(filter);
     return locationEvents.map(LocationEventResponseDto.fromLocationEvent);
   }
 
@@ -51,10 +56,11 @@ export class LocationEventService {
     const filter = this.buildFilter(filterData);
     const pagination = { page, limit, sortBy, sortOrder };
 
-    const result = await this.locationEventRepository.findByFilterWithPagination(
-      filter,
-      pagination,
-    );
+    const result =
+      await this.locationEventRepository.findByFilterWithPagination(
+        filter,
+        pagination,
+      );
 
     return {
       ...result,
@@ -80,16 +86,22 @@ export class LocationEventService {
     }
 
     const updatedLocationEvent = await this.locationEventRepository.update(id, {
-      trip: updateLocationEventDto.tripId ? {
-        connect: {
-          id: updateLocationEventDto.tripId,
-        },
-      } : updateLocationEventDto.tripId === null ? { disconnect: true } : undefined,
-      bus: updateLocationEventDto.busId ? {
-        connect: {
-          id: updateLocationEventDto.busId,
-        },
-      } : undefined,
+      trip: updateLocationEventDto.tripId
+        ? {
+            connect: {
+              id: updateLocationEventDto.tripId,
+            },
+          }
+        : updateLocationEventDto.tripId === null
+          ? { disconnect: true }
+          : undefined,
+      bus: updateLocationEventDto.busId
+        ? {
+            connect: {
+              id: updateLocationEventDto.busId,
+            },
+          }
+        : undefined,
       timestamp: updateLocationEventDto.timestamp,
       latitude: updateLocationEventDto.latitude,
       longitude: updateLocationEventDto.longitude,
@@ -108,7 +120,9 @@ export class LocationEventService {
     await this.locationEventRepository.delete(id);
   }
 
-  private buildFilter(query: QueryLocationEventDto): Prisma.LocationEventWhereInput {
+  private buildFilter(
+    query: QueryLocationEventDto,
+  ): Prisma.LocationEventWhereInput {
     const filter: Prisma.LocationEventWhereInput = {};
 
     if (query.tripId) {
@@ -125,7 +139,8 @@ export class LocationEventService {
 
     if (query.timestampFrom || query.timestampTo) {
       filter.timestamp = {};
-      if (query.timestampFrom) filter.timestamp.gte = new Date(query.timestampFrom);
+      if (query.timestampFrom)
+        filter.timestamp.gte = new Date(query.timestampFrom);
       if (query.timestampTo) filter.timestamp.lte = new Date(query.timestampTo);
     }
 

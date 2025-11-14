@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsDateString, IsOptional, IsEnum } from 'class-validator';
+import { IsDateString, IsEnum, IsInt, IsOptional } from 'class-validator';
 import { AttendanceActionEnum } from 'src/core/enums/attendance-action.enum';
 
 export class CreateAttendanceDto {

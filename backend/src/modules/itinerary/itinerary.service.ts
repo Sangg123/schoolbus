@@ -1,22 +1,20 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { ItineraryRepository } from './itinerary.repository';
-import { CreateItineraryDto } from './dto/create-itinerary.dto';
-import { UpdateItineraryDto } from './dto/update-itinerary.dto';
-import { ItineraryResponseDto } from './dto/itinerary-response.dto';
-import { QueryItineraryDto } from './dto/query-itinerary.dto';
-import { PaginatedQueryItineraryDto } from './dto/paginated-query-itinerary.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateItineraryDto } from './dto/create-itinerary.dto';
+import { ItineraryResponseDto } from './dto/itinerary-response.dto';
 import { PageableItineraryResponseDto } from './dto/pageable-itinerary-response.dto';
+import { PaginatedQueryItineraryDto } from './dto/paginated-query-itinerary.dto';
+import { QueryItineraryDto } from './dto/query-itinerary.dto';
+import { UpdateItineraryDto } from './dto/update-itinerary.dto';
+import { ItineraryRepository } from './itinerary.repository';
 
 @Injectable()
 export class ItineraryService {
   constructor(private readonly itineraryRepository: ItineraryRepository) {}
 
-  async create(createItineraryDto: CreateItineraryDto): Promise<ItineraryResponseDto> {
+  async create(
+    createItineraryDto: CreateItineraryDto,
+  ): Promise<ItineraryResponseDto> {
     const itinerary = await this.itineraryRepository.create({
       route: {
         connect: {
@@ -76,16 +74,20 @@ export class ItineraryService {
     }
 
     const updatedItinerary = await this.itineraryRepository.update(id, {
-      route: updateItineraryDto.routeId ? {
-        connect: {
-          id: updateItineraryDto.routeId,
-        },
-      } : undefined,
-      stop: updateItineraryDto.stopId ? {
-        connect: {
-          id: updateItineraryDto.stopId,
-        },
-      } : undefined,
+      route: updateItineraryDto.routeId
+        ? {
+            connect: {
+              id: updateItineraryDto.routeId,
+            },
+          }
+        : undefined,
+      stop: updateItineraryDto.stopId
+        ? {
+            connect: {
+              id: updateItineraryDto.stopId,
+            },
+          }
+        : undefined,
       stopOrder: updateItineraryDto.stopOrder,
       estimatedTime: updateItineraryDto.estimatedTime,
     });

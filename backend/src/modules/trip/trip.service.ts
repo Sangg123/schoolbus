@@ -1,16 +1,12 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { TripRepository } from './trip.repository';
-import { CreateTripDto } from './dto/create-trip.dto';
-import { UpdateTripDto } from './dto/update-trip.dto';
-import { TripResponseDto } from './dto/trip-response.dto';
-import { QueryTripDto } from './dto/query-trip.dto';
-import { PaginatedQueryTripDto } from './dto/paginated-query-trip.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateTripDto } from './dto/create-trip.dto';
 import { PageableTripResponseDto } from './dto/pageable-trip-response.dto';
+import { PaginatedQueryTripDto } from './dto/paginated-query-trip.dto';
+import { QueryTripDto } from './dto/query-trip.dto';
+import { TripResponseDto } from './dto/trip-response.dto';
+import { UpdateTripDto } from './dto/update-trip.dto';
+import { TripRepository } from './trip.repository';
 
 @Injectable()
 export class TripService {

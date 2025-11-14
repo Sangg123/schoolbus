@@ -1,7 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsInt, IsDateString, IsOptional, IsNumber, IsEnum } from 'class-validator';
-import { LocationSourceEnum } from 'src/core/enums/location-source.enum';
 import { Type } from 'class-transformer';
+import {
+  IsDateString,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
+import { LocationSourceEnum } from 'src/core/enums/location-source.enum';
 
 export class CreateLocationEventDto {
   @ApiPropertyOptional()

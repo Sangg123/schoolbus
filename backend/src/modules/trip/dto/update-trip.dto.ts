@@ -1,8 +1,7 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateTripDto } from './create-trip.dto';
-import { IsDateString, IsOptional, IsEnum, IsObject } from 'class-validator';
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { IsDateString, IsEnum, IsObject, IsOptional } from 'class-validator';
 import { TripStatusEnum } from 'src/core/enums/trip-status.enum';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { CreateTripDto } from './create-trip.dto';
 
 export class UpdateTripDto extends PartialType(CreateTripDto) {
   @ApiPropertyOptional({ enum: TripStatusEnum })

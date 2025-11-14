@@ -1,28 +1,30 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { NotificationRepository } from './notification.repository';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { NotificationResponseDto } from './dto/notification-response.dto';
-import { QueryNotificationDto } from './dto/query-notification.dto';
-import { PaginatedQueryNotificationDto } from './dto/paginated-query-notification.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { CreateNotificationDto } from './dto/create-notification.dto';
+import { NotificationResponseDto } from './dto/notification-response.dto';
 import { PageableNotificationResponseDto } from './dto/pageable-notification-response.dto';
+import { PaginatedQueryNotificationDto } from './dto/paginated-query-notification.dto';
+import { QueryNotificationDto } from './dto/query-notification.dto';
+import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { NotificationRepository } from './notification.repository';
 
 @Injectable()
 export class NotificationService {
-  constructor(private readonly notificationRepository: NotificationRepository) {}
+  constructor(
+    private readonly notificationRepository: NotificationRepository,
+  ) {}
 
-  async create(createNotificationDto: CreateNotificationDto): Promise<NotificationResponseDto> {
+  async create(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<NotificationResponseDto> {
     const notification = await this.notificationRepository.create({
-      sender: createNotificationDto.senderId ? {
-        connect: {
-          id: createNotificationDto.senderId,
-        },
-      } : undefined,
+      sender: createNotificationDto.senderId
+        ? {
+            connect: {
+              id: createNotificationDto.senderId,
+            },
+          }
+        : undefined,
       receiver: {
         connect: {
           id: createNotificationDto.receiverId,
@@ -36,9 +38,12 @@ export class NotificationService {
     return NotificationResponseDto.fromNotification(notification);
   }
 
-  async findAll(query: QueryNotificationDto): Promise<NotificationResponseDto[]> {
+  async findAll(
+    query: QueryNotificationDto,
+  ): Promise<NotificationResponseDto[]> {
     const filter = this.buildFilter(query);
-    const notifications = await this.notificationRepository.findByFilter(filter);
+    const notifications =
+      await this.notificationRepository.findByFilter(filter);
     return notifications.map(NotificationResponseDto.fromNotification);
   }
 
@@ -78,16 +83,22 @@ export class NotificationService {
     }
 
     const updatedNotification = await this.notificationRepository.update(id, {
-      sender: updateNotificationDto.senderId ? {
-        connect: {
-          id: updateNotificationDto.senderId,
-        },
-      } : updateNotificationDto.senderId === null ? { disconnect: true } : undefined,
-      receiver: updateNotificationDto.receiverId ? {
-        connect: {
-          id: updateNotificationDto.receiverId,
-        },
-      } : undefined,
+      sender: updateNotificationDto.senderId
+        ? {
+            connect: {
+              id: updateNotificationDto.senderId,
+            },
+          }
+        : updateNotificationDto.senderId === null
+          ? { disconnect: true }
+          : undefined,
+      receiver: updateNotificationDto.receiverId
+        ? {
+            connect: {
+              id: updateNotificationDto.receiverId,
+            },
+          }
+        : undefined,
       content: updateNotificationDto.content,
       type: updateNotificationDto.type,
       isRead: updateNotificationDto.isRead,
@@ -104,7 +115,9 @@ export class NotificationService {
     await this.notificationRepository.delete(id);
   }
 
-  private buildFilter(query: QueryNotificationDto): Prisma.NotificationWhereInput {
+  private buildFilter(
+    query: QueryNotificationDto,
+  ): Prisma.NotificationWhereInput {
     const filter: Prisma.NotificationWhereInput = {};
 
     if (query.senderId) {
@@ -125,7 +138,8 @@ export class NotificationService {
 
     if (query.sentTimeFrom || query.sentTimeTo) {
       filter.sentTime = {};
-      if (query.sentTimeFrom) filter.sentTime.gte = new Date(query.sentTimeFrom);
+      if (query.sentTimeFrom)
+        filter.sentTime.gte = new Date(query.sentTimeFrom);
       if (query.sentTimeTo) filter.sentTime.lte = new Date(query.sentTimeTo);
     }
 

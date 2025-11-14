@@ -1,22 +1,20 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import { AttendanceRepository } from './attendance.repository';
-import { CreateAttendanceDto } from './dto/create-attendance.dto';
-import { UpdateAttendanceDto } from './dto/update-attendance.dto';
-import { AttendanceResponseDto } from './dto/attendance-response.dto';
-import { QueryAttendanceDto } from './dto/query-attendance.dto';
-import { PaginatedQueryAttendanceDto } from './dto/paginated-query-attendance.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { AttendanceRepository } from './attendance.repository';
+import { AttendanceResponseDto } from './dto/attendance-response.dto';
+import { CreateAttendanceDto } from './dto/create-attendance.dto';
 import { PageableAttendanceResponseDto } from './dto/pageable-attendance-response.dto';
+import { PaginatedQueryAttendanceDto } from './dto/paginated-query-attendance.dto';
+import { QueryAttendanceDto } from './dto/query-attendance.dto';
+import { UpdateAttendanceDto } from './dto/update-attendance.dto';
 
 @Injectable()
 export class AttendanceService {
   constructor(private readonly attendanceRepository: AttendanceRepository) {}
 
-  async create(createAttendanceDto: CreateAttendanceDto): Promise<AttendanceResponseDto> {
+  async create(
+    createAttendanceDto: CreateAttendanceDto,
+  ): Promise<AttendanceResponseDto> {
     const attendance = await this.attendanceRepository.create({
       trip: {
         connect: {
@@ -81,21 +79,27 @@ export class AttendanceService {
     }
 
     const updatedAttendance = await this.attendanceRepository.update(id, {
-      trip: updateAttendanceDto.tripId ? {
-        connect: {
-          id: updateAttendanceDto.tripId,
-        },
-      } : undefined,
-      student: updateAttendanceDto.studentId ? {
-        connect: {
-          id: updateAttendanceDto.studentId,
-        },
-      } : undefined,
-      stop: updateAttendanceDto.stopId ? {
-        connect: {
-          id: updateAttendanceDto.stopId,
-        },
-      } : undefined,
+      trip: updateAttendanceDto.tripId
+        ? {
+            connect: {
+              id: updateAttendanceDto.tripId,
+            },
+          }
+        : undefined,
+      student: updateAttendanceDto.studentId
+        ? {
+            connect: {
+              id: updateAttendanceDto.studentId,
+            },
+          }
+        : undefined,
+      stop: updateAttendanceDto.stopId
+        ? {
+            connect: {
+              id: updateAttendanceDto.stopId,
+            },
+          }
+        : undefined,
       action: updateAttendanceDto.action,
       timestamp: updateAttendanceDto.timestamp,
     });
@@ -131,7 +135,8 @@ export class AttendanceService {
 
     if (query.timestampFrom || query.timestampTo) {
       filter.timestamp = {};
-      if (query.timestampFrom) filter.timestamp.gte = new Date(query.timestampFrom);
+      if (query.timestampFrom)
+        filter.timestamp.gte = new Date(query.timestampFrom);
       if (query.timestampTo) filter.timestamp.lte = new Date(query.timestampTo);
     }
 

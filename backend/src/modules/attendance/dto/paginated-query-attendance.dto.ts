@@ -1,6 +1,6 @@
 import { IntersectionType } from '@nestjs/swagger';
-import { QueryAttendanceDto } from './query-attendance.dto';
 import { BaseQueryDto } from '../../../core/dto/base-query.dto';
+import { QueryAttendanceDto } from './query-attendance.dto';
 
 export class PaginatedQueryAttendanceDto extends IntersectionType(
   QueryAttendanceDto,
