@@ -23,6 +23,7 @@ import { ItineraryModule } from './modules/itinerary/itinerary.module';
 import { TripModule } from './modules/trip/trip.module';
 import { LocationEventModule } from './modules/location-event/location-event.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { AttendanceModule } from './modules/attendance/attendance.module';
     TripModule,
     LocationEventModule,
     AttendanceModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [
