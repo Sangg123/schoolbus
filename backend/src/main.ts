@@ -2,12 +2,25 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import morgan from 'morgan';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { PrismaExceptionFilter } from './configs/PrismaExceptionFilter';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
+  const loggerHttp = new Logger('HTTP');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.use(
+    morgan('dev', {
+      stream: {
+        write: (message) => loggerHttp.log(message.trim()),
+      },
+    }),
+  );
+
+  app.useGlobalFilters(new PrismaExceptionFilter());
 
   // Serve static files from public directory
   const staticPath = join(__dirname, '../..', 'public');

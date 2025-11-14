@@ -8,6 +8,16 @@ export class PageableMetaDto {
   limit: number;
 
   @ApiProperty()
+  sortBy: string;
+
+  @ApiProperty({
+    enum: ['asc', 'desc'],
+    description: 'Sort order: asc or desc',
+    example: 'asc',
+  })
+  sortOrder: 'asc' | 'desc';
+
+  @ApiProperty()
   total: number;
 
   @ApiProperty()
