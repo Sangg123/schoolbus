@@ -38,6 +38,8 @@ export abstract class BaseRepository<T, C, U, F> {
       meta: {
         page,
         limit,
+        sortBy,
+        sortOrder,
         total,
         totalPages,
         hasNext: page < totalPages,
@@ -81,6 +83,8 @@ export abstract class BaseRepository<T, C, U, F> {
       meta: {
         page,
         limit,
+        sortBy,
+        sortOrder,
         total,
         totalPages,
         hasNext: page < totalPages,

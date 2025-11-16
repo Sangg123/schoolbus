@@ -1,3 +1,4 @@
 {
-    "formatFiles.runOrganizeImports": true
+  "formatFiles.runOrganizeImports": true,
+  "editor.formatOnSave": true
 }

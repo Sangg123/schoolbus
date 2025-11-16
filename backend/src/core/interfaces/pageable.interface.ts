@@ -6,6 +6,8 @@ export interface Pageable<T> {
 export interface PageableMeta {
   page: number;
   limit: number;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
   total: number;
   totalPages: number;
   hasNext: boolean;

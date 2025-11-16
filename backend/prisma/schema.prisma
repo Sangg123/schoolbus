@@ -69,13 +69,15 @@ model Student {
 }
 
 model ParentStudent {
+  id            Int        @id @default(autoincrement())
   parentId  Int
   studentId Int
+  relationship String?
   
   parent  Parent  @relation(fields: [parentId], references: [id], onDelete: Cascade)
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   
-  @@id([parentId, studentId])
+  @@unique([parentId, studentId])
 }
 
 model Bus {
@@ -131,8 +133,8 @@ model Schedule {
   busId      Int
   driverId   Int
   dayOfWeek  Int
-  tripType   TripType
   startTime  DateTime
+  endTime DateTime
   
   route    Route            @relation(fields: [routeId], references: [id])
   bus      Bus              @relation(fields: [busId], references: [id])
@@ -140,7 +142,7 @@ model Schedule {
   trips    Trip[]
   students StudentSchedule[]
   
-  @@unique([routeId, dayOfWeek, tripType])
+  @@unique([routeId, dayOfWeek])
 }
 
 model StudentSchedule {
