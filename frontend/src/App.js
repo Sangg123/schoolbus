@@ -20,6 +20,8 @@ import ADListRoute from "./admin/adminListRoutes";
 import ADManageCalendar from "./admin/adminManageCalendar";
 import ADCreateCalendar from "./admin/adminCreateCalendar";
 
+import login from './api/login'
+
 function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -42,29 +44,37 @@ function App() {
   const [showCreateCalendar, setShowCreateCalendar] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   
+//  const handleLogin = (username, password) => {
+//    if (username === "admin" && password === "admin") {
+//      setLoaiTK("admin");
+//      setIsLoggedIn(true);
+//      setShowLogin(false);
+//      alert("Đăng nhập thành công!");
+//    }
+//    else if (username === "phuhuynh" && password === "phuhuynh") {
+//      setLoaiTK("phuhuynh");
+//      setIsLoggedIn(true);
+//      setShowLogin(false);
+//      alert("Đăng nhập thành công!");
+//    }
+//    else if (username === "taixe" && password === "taixe") {
+//      setLoaiTK("taixe");
+//      setIsLoggedIn(true);
+//      setShowLogin(false);
+//      alert("Đăng nhập thành công!");
+//    }
+//    else {
+//      alert("Sai tài khoản hoặc mật khẩu!");
+//    }
+//  };
+
   const handleLogin = (username, password) => {
-    if (username === "admin" && password === "admin") {
-      setLoaiTK("admin");
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      alert("Đăng nhập thành công!");
-    }
-    else if (username === "phuhuynh" && password === "phuhuynh") {
-      setLoaiTK("phuhuynh");
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      alert("Đăng nhập thành công!");
-    }
-    else if (username === "taixe" && password === "taixe") {
-      setLoaiTK("taixe");
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      alert("Đăng nhập thành công!");
-    }
-    else {
-      alert("Sai tài khoản hoặc mật khẩu!");
-    }
+    login(username, password)
+      .then(() => {setIsLoggedIn(true)})
+      .catch((error) => {console.log(error)});
   };
+
+
 
   const handleLogout = ()=>{
     setIsLoggedIn(false);

@@ -11,7 +11,7 @@ function LoginPopup({ onClose, onLogin }) {
         <h2>Đăng nhập</h2>
         <input
           type="text"
-          placeholder="Tài khoản"
+          placeholder="Email"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
