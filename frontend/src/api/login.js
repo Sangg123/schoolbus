@@ -5,9 +5,9 @@ import api from './api'
 const login = async (identifier, password) => {
     var response = null
     try {
-        response = await api.post("auth/login", {identifier, password});
+        response = await api.post("/auth/login", {identifier, password});
         if(response.status !== 200 && response.status !== 201) {
-            throw new Error(response.status);
+            throw new Error(response);
         }
         const data = response.data;
         const token = data.accessToken;
