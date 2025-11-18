@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import Navbar from "./components/navbar";
 import Sidebar from "./components/sidebar";
 import LoginPopup from "./components/login";
@@ -43,37 +43,26 @@ function App() {
   const [showManageCalendar, setShowManageCalendar] = useState (false);
   const [showCreateCalendar, setShowCreateCalendar] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
-  
-//  const handleLogin = (username, password) => {
-//    if (username === "admin" && password === "admin") {
-//      setLoaiTK("admin");
-//      setIsLoggedIn(true);
-//      setShowLogin(false);
-//      alert("Đăng nhập thành công!");
-//    }
-//    else if (username === "phuhuynh" && password === "phuhuynh") {
-//      setLoaiTK("phuhuynh");
-//      setIsLoggedIn(true);
-//      setShowLogin(false);
-//      alert("Đăng nhập thành công!");
-//    }
-//    else if (username === "taixe" && password === "taixe") {
-//      setLoaiTK("taixe");
-//      setIsLoggedIn(true);
-//      setShowLogin(false);
-//      alert("Đăng nhập thành công!");
-//    }
-//    else {
-//      alert("Sai tài khoản hoặc mật khẩu!");
-//    }
-//  };
+  const [userInfo, setUserInfo] = useState("");
 
-  const handleLogin = (username, password) => {
-    login(username, password)
-      .then(() => {setIsLoggedIn(true)})
-      .catch((error) => {console.log(error)});
+  const handleLogin = async (username, password) => {
+    try{
+      const loginRequest = await login(username, password);
+      // console.log(loginRequest);
+      const data = loginRequest.data;
+      // console.log(data)
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      setUserInfo(data);
+      setLoaiTK(data.user.role);
+      setIsLoggedIn(true);
+      setShowLogin(false);
+      console.log(data)
+    } 
+    catch(err) {
+      if (err.status === 401)
+        alert("Tài khoản hoặc mật khẩu không đúng");
+    }
   };
-
 
 
   const handleLogout = ()=>{
@@ -95,6 +84,10 @@ function App() {
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
     setShowMessage(false);
+
+    //xoa du lieu local va session nguoi dung
+    localStorage.clear();
+    setUserInfo("");
   }
 
   // chức năng menu cho parent
@@ -223,6 +216,7 @@ function App() {
         onLoginClick={() => setShowLogin(true)}
         loaiTK={loaiTK}
         onLogoutClick={handleLogout}
+        userInfo={userInfo}
       />
 
       <div className="main-layout">

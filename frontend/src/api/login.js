@@ -1,18 +1,23 @@
 import api from './api' 
 
+
+//send login request and set token to locahost
 const login = async (identifier, password) => {
+    var response = null
     try {
-        const request = await api.post("auth/login", {identifier, password});
-        const response = await request.data
-        console.log(response)
-        const token = await response.accessToken;
-        if (!token) throw new Error("Missing token response from login");
-        localStorage.setItem("userInfo", JSON.stringify(response));
-        localStorage.setItem("token", token);
+        response = await api.post("auth/login", {identifier, password});
+        if(response.status !== 200 && response.status !== 201) {
+            throw new Error(response.status);
+        }
+        const data = response.data;
+        const token = data.accessToken;
         api.defaults.headers.common.Authorization = `Bearer ${token}`;
+        return response;
     } catch (err) {
-        console.error(err)
+        console.error(err);
+        throw err;
     }
+
 };
 
 export default login;

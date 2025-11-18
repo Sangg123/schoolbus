@@ -9,7 +9,7 @@ function Sidebar({
 }) {
   let menu;
 
-  if(isLoggedIn && loaiTK=="admin"){
+  if(isLoggedIn && loaiTK === "admin"){
     menu=
     <div className="sidebar">
       <ul>
@@ -30,7 +30,7 @@ function Sidebar({
         </ul>
     </div>;
   }
-  else if (isLoggedIn && loaiTK=="taixe"){
+  else if (isLoggedIn && loaiTK === "driver"){
     menu=
     <div className="sidebar">
       <ul>
@@ -41,7 +41,7 @@ function Sidebar({
       </ul>
     </div>;
   }
-  else if (isLoggedIn && loaiTK=="phuhuynh"){
+  else if (isLoggedIn && loaiTK === "parent"){
     menu=
     <div className="sidebar">
       <ul>
