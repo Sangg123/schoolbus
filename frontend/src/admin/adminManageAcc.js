@@ -88,8 +88,10 @@ export default function ADManageAcc() {
         <input type="tel" name="phone" value={createUser.phone} onChange={handleChange}></input>
         <p>Vai trò</p>
         <input type="text" name="role" value={createUser.role} onChange={handleChange}></input>
+        <div className="popup-actions">
         <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => requestAddUser(createUser)}></input>
         <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
+        </div>
       </div>
     </div>
   );
