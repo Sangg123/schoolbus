@@ -62,6 +62,7 @@
 /* Submenu (ẩn mặc định, hiển thị sang phải) */
 .has-submenu {
   position: relative;
+  z-index: 1000;
 }
 
 /* Submenu xuất hiện sang bên phải */
@@ -79,7 +80,7 @@
   min-width: 180px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   animation: slideInRight 0.2s ease-in-out;
-  z-index: 100;
+  z-index: 1000;
 }
 
 /* Hover vào cha thì submenu hiện */
