@@ -48,15 +48,12 @@ function App() {
   const handleLogin = async (username, password) => {
     try{
       const loginRequest = await login(username, password);
-      // console.log(loginRequest);
       const data = loginRequest.data;
-      // console.log(data)
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUserInfo(data);
       setLoaiTK(data.user.role);
       setIsLoggedIn(true);
       setShowLogin(false);
-      console.log(data)
     } 
     catch(err) {
       if (err.status === 401)
