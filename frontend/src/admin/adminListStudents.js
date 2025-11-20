@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import "../stylecss/adminListStudents.css";
 import createStudentApi from "../api/createStudent";
 import getAllStudentApi from "../api/getAllStudent";
+import correctStudentApi from "../api/correctStudent";
 
 function ADListStudents() {
   const [students, setStudents] = useState([]);
   const [showAdd, setShowAdd] = useState(false);
   const [student, setStudent] = useState({ fullName: "", classes: "", studentCode: "" });
+  const [needCorrection, setCorrection] = useState(false);
+  const [correctStudent, setCorrectStudent] = useState({ fullName: "", classes: "", studentCode: "" });
+
 
   useEffect(() => {
     const load = async () => {
@@ -33,10 +37,15 @@ function ADListStudents() {
     setStudent(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setCorrectStudent(prev => ({ ...prev, [name]: value }));
+  };
+  
   const submitAdd = async () => {
     try {
-      const resp = await createStudentApi(student.fullName, student.classes, student.studentCode);
-      const createdRaw = resp?.data;
+      const response = await createStudentApi(student.fullName, student.classes, student.studentCode);
+      const createdRaw = response?.data;
       if (createdRaw) {
         const created = {
           id: createdRaw.id,
@@ -66,18 +75,49 @@ function ADListStudents() {
   const studentRow = (s, i) => {
     const { id, fullName, studentCode, classes } = s ?? {};
     return (
-      <tr key={id ?? i}>
-        <td>{i + 1}</td>
-        <td>{studentCode}</td>
-        <td>{fullName}</td>
-        <td>{classes}</td>
-        <td>
-          <button className="edit-btn">Sửa</button>
-          <button className="delete-btn">Xoá</button>
-        </td>
-      </tr>
+    <tr key={id ?? i}>
+      <td>{i + 1}</td>
+      <td>{studentCode}</td>
+      <td>{fullName}</td>
+      <td>{classes}</td>
+      <td>
+        <button className="edit-btn" onClick={() => {setCorrection(true); setCorrectStudent(s)}}>Sửa</button>
+        <button className="delete-btn">Xoá</button>
+      </td>
+    </tr>
+  );
+};
+
+  const correctStudentMenu = () => {
+    return (
+      <div className="popup-overlay correctStudent">
+        <div className="popup">
+          <h3>Sửa học sinh</h3>
+          <input name="studentCode" value={correctStudent.studentCode} onChange={handleEditChange} placeholder="Mã học sinh" />
+          <input name="fullName" value={correctStudent.fullName} onChange={handleEditChange} placeholder="Họ tên" />
+          <input name="classes" value={correctStudent.classes} onChange={handleEditChange} placeholder="Lớp" />
+          <div className="popup-actions">
+            <button onClick={() => correction(correctStudent.id, correctStudent.fullName, correctStudent.studentCode, correctStudent.classes) } className="btn">Xác nhận</button>
+            <button onClick={() => {setCorrection(false)}} className="btn">Hủy</button>
+          </div>
+        </div>
+      </div>
     );
-  };
+  }
+
+  const correction = async (id, fullName, studentCode, classes) => {
+    try {
+      const response = await correctStudentApi(id, fullName, studentCode, classes);
+      //clear correction list 
+      setCorrectStudent({ fullName: "", classes: "", studentCode: "" })
+      setCorrection(false);
+    } catch (err) {
+      console.error(err);
+      if (err.status === 409) 
+        alert("thông tin chưa được thay đổi hoặc bị trùng lặp")
+    }
+  }
+
 
   return (
     <div className="stu-container">
@@ -116,6 +156,7 @@ function ADListStudents() {
           </div>
         </div>
       )}
+      {needCorrection && correctStudentMenu()}
     </div>
   );
 }
