@@ -1,27 +1,43 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../stylecss/adminManageAcc.css";
-import getalluser from "../api/getalluser";
-function ADManageAcc() {
-  //todo: add filter (mayber)
-  var fullTable = null;
+import getalluser from "../api/getAllUser";
+import "../stylecss/general.css";
+import addUserapi from "../api/addUser" 
+
+
+
+//todo: reload after add account
+//
+export default function ADManageAcc() {
+  const [users, setUsers] = useState([]);
+  const [showadduser, setShowAddUser] = useState(false);
+  const [createUser, setCreateUser] = useState({
+    email: "", password: "", fullNawme: "", phone: "", role: ""
+  });
+
   useEffect(() => {
-    const data = requestalluser("", "", "", "");
-    for (var i = 0; i < data.length; i++) {
-      var user = data[i];
-      fullTable = fullTable + accountTable(i, user.id, user.email, user.fullName, user.phone, user.role);
+    const load = async () => {
+      try {
+        const response = await getalluser("", "", "", "");
+        setUsers(response?.data ?? []);
+      } catch (err) {
+        console.error("Fetch users error:", err);
+      }
     }
+    load();
   }, []);
 
-
-  console.log(fullTable)
-  const accountTable = (index, id, email, fullName, phone, role) => {
+  const renderUserRow = (user, index) => {
+    const { id, email, fullName, phone, role } = user ?? {};
+    const key = id ?? index;
+    const number = index + 1;
     return (
-      <tr>
-        <td>{index}</td>
+      <tr key={key}>
+        <td>{number}</td>
         <td>{id}</td>
         <td>{email}</td>
         <td>{fullName}</td>
-        <td>{phone}</td>
+        <td>{phone ?? "-"}</td>
         <td>{role}</td>
         <td>
           <button className="edit-btn">Sửa</button>
@@ -29,44 +45,77 @@ function ADManageAcc() {
         </td>
       </tr>
     );
-  }
+  };
+
+  const userTable = (
+    <tbody>
+      {users.map(renderUserRow)}
+    </tbody>
+  );
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCreateUser(prev => ({ ...prev, [name]: value }));
+  };
+
+  const requestAddUser = async (createUser) => {
+      try {
+        const response = await addUserapi(createUser.email, createUser.password, createUser.fullName, createUser.phone, createUser.role);
+      } catch (err) {
+        if (err.response.data.message === "Email already exists"){
+          alert("Email đã tồn tại");
+        } else if (err.response.data.meta?.target[0] === "phone"){
+          alert("Số điện thoại đã được sử dụng");
+        }
+        console.error(err);
+      }
+      
+    };
+
+
+  //todo: add validation
+  const addUser = (
+    <div className="popup-overlay">
+        <div className="adduser popup">
+        <h2>Tạo tài khoản</h2>
+        <p>Email</p>
+        <input type="email" name="email" value={createUser.email} onChange={handleChange}></input>
+        <p>Mật khẩu</p>
+        <input type="password" name="password" value={createUser.password} onChange={handleChange}></input>
+        <p>Tên người dùng</p>
+        <input type="text" name="fullName" value={createUser.fullName} onChange={handleChange}></input>
+        <p>Số điện thoại</p>
+        <input type="tel" name="phone" value={createUser.phone} onChange={handleChange}></input>
+        <p>Vai trò</p>
+        <input type="text" name="role" value={createUser.role} onChange={handleChange}></input>
+        <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => requestAddUser(createUser)}></input>
+        <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
+      </div>
+    </div>
+  );
 
   return (
     <div className="acc-container">
       <h2 className="acc-title">👤 Quản lý tài khoản</h2>
-
       <table className="acc-table">
         <thead>
           <tr>
             <th>STT</th>
-            <th>Mã Người Dùng</th>
+            <th>ID</th>
             <th>Email</th>
-            <th>Họ Tên</th>
-            <th>Số ĐT</th>
-            <th>Vai Trò</th>
-            <th>Tuỳ Chỉnh</th>
+            <th>Họ tên</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Thao tác</th>
           </tr>
         </thead>
-        <tbody>
-          {fullTable}
-        </tbody>
+        {userTable}
       </table>
-
       <div className="acc-actions">
-        <button className="add-btn">➕ Thêm Tài Khoản</button>
-        <button className="save-btn">💾 Lưu Thay Đổi</button>
+        <button className="add-btn" onClick={() => { setShowAddUser(true) }}>➕ Thêm Tài Khoản</button>
+        {showadduser && addUser}
       </div>
+
     </div>
   );
 }
-
-var requestalluser = async (email, fullName, phone, role) => {
-  try {
-    const response = await getalluser(email, fullName, phone, role);
-    const data = response.data;
-    return data;
-  } catch (err) {
-    console.error(err);
-  }
-}
-export default ADManageAcc;

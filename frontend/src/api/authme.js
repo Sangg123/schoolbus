@@ -1,6 +1,6 @@
 import api from "./api";
 
-const authme = async () => {
+const authMe = async () => {
     var response = null;
     try {
         response = await api.get("/auth/me");
@@ -14,4 +14,4 @@ const authme = async () => {
     }
 };
 
-export default authme;
+export default authMe;
