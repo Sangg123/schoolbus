@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../stylecss/adminManageAcc.css";
-import getalluser from "../api/getAllUser";
+import getalluser from "../api/getalluser";
 import "../stylecss/general.css";
 import addUserapi from "../api/addUser" 
 
