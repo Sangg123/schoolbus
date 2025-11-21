@@ -11,4 +11,4 @@ const getAllRoute = async (name, description) => {
     }
 };
 
-export default getAllUser;
+export default getAllRoute;
