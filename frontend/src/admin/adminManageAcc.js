@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../stylecss/adminManageAcc.css";
 import getalluser from "../api/getalluser";
 import "../stylecss/general.css";
-import addUserapi from "../api/addUser" 
+import addUserapi from "../api/addUser"
 
 
 
@@ -15,17 +15,18 @@ export default function ADManageAcc() {
     email: "", password: "", fullNawme: "", phone: "", role: ""
   });
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const response = await getalluser("", "", "", "");
-        setUsers(response?.data ?? []);
-      } catch (err) {
-        console.error("Fetch users error:", err);
-      }
+  const getalluserFunction = async () => {
+    try {
+      const response = await getalluser("", "", "", "");
+      setUsers(response?.data ?? []);
+    } catch (err) {
+      console.error("Fetch users error:", err);
     }
-    load();
-  }, []);
+  };
+
+  useEffect(() => {
+    getalluserFunction();
+  }, [])
 
   const renderUserRow = (user, index) => {
     const { id, email, fullName, phone, role } = user ?? {};
@@ -59,38 +60,32 @@ export default function ADManageAcc() {
   };
 
   const requestAddUser = async (createUser) => {
-      try {
-        const response = await addUserapi(createUser.email, createUser.password, createUser.fullName, createUser.phone, createUser.role);
-      } catch (err) {
-        if (err.response.data.message === "Email already exists"){
-          alert("Email đã tồn tại");
-        } else if (err.response.data.meta?.target[0] === "phone"){
-          alert("Số điện thoại đã được sử dụng");
-        }
-        console.error(err);
+    try {
+      const response = await addUserapi(createUser.email, createUser.password, createUser.fullName, createUser.phone, createUser.role);
+    } catch (err) {
+      if (err.response.data.message === "Email already exists") {
+        alert("Email đã tồn tại");
+      } else if (err.response.data.meta?.target[0] === "phone") {
+        alert("Số điện thoại đã được sử dụng");
       }
-      
-    };
+      console.error(err);
+    }
+
+  };
 
 
   //todo: add validation
   const addUser = (
     <div className="popup-overlay">
-        <div className="adduser popup">
-        <h2>Tạo tài khoản</h2>
-        <p>Email</p>
-        <input type="email" name="email" value={createUser.email} onChange={handleChange}></input>
-        <p>Mật khẩu</p>
-        <input type="password" name="password" value={createUser.password} onChange={handleChange}></input>
-        <p>Tên người dùng</p>
-        <input type="text" name="fullName" value={createUser.fullName} onChange={handleChange}></input>
-        <p>Số điện thoại</p>
-        <input type="tel" name="phone" value={createUser.phone} onChange={handleChange}></input>
-        <p>Vai trò</p>
-        <input type="text" name="role" value={createUser.role} onChange={handleChange}></input>
+      <div className="adduser popup">
+        <input type="email" name="email" placeholder="Email" value={createUser.email} onChange={handleChange}></input>
+        <input type="password" name="password" placeholder="Mật khẩu" value={createUser.password} onChange={handleChange}></input>
+        <input type="text" name="fullName" placeholder="Tên người dùng" value={createUser.fullName} onChange={handleChange}></input>
+        <input type="tel" name="phone" placeholder="Số điện thoại" value={createUser.phone} onChange={handleChange}></input>
+        <input type="text" name="role" placeholder="Vai trò" value={createUser.role} onChange={handleChange}></input>
         <div className="popup-actions">
-        <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => requestAddUser(createUser)}></input>
-        <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => { requestAddUser(createUser); getalluserFunction() }}></input>
+          <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
         </div>
       </div>
     </div>
