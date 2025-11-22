@@ -13,7 +13,8 @@ function ADListRoute() {
   const getAllRoute = async () => {
     try {
       const response = await getAllRouteApi("", "");
-      setRoutes(response?.data ?? []);
+      var sorted = response?.data?.sort((a, b) => parseInt(a.id) - parseInt(b.id)) ?? [];
+      setRoutes(sorted);
     } catch (err) {
       console.error(err);
     }
@@ -121,7 +122,7 @@ function ADListRoute() {
         <thead>
           <tr>
             <th>STT</th>
-            <th>Mã Tuyến</th>
+            <th>ID</th>
             <th>Tên Tuyến</th>
             <th>Mô Tả</th>
             <th>Tuỳ Chỉnh</th>
