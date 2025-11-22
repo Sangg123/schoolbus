@@ -24,7 +24,8 @@ export default function ADManageAcc() {
   const getalluserFunction = async () => {
     try {
       const response = await getalluser("", "", "", "");
-      setUsers(response?.data ?? []);
+      var sorted = response?.data?.sort((a, b) => parseInt(a.id) - parseInt(b.id)) ?? [];
+      setUsers(sorted);
     } catch (err) {
       console.error("Fetch users error:", err);
     }

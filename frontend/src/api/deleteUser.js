@@ -1,6 +1,6 @@
 import api from './api'
 
-const modifyuser = async (id) => {
+const deleteUser = async (id) => {
     var response = null;
     try {
         response = await api.delete(`/users/${id}`);
@@ -11,4 +11,4 @@ const modifyuser = async (id) => {
     }
 };
 
-export default modifyuser;
+export default deleteUser;

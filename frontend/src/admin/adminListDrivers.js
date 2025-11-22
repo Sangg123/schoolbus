@@ -2,23 +2,8 @@ import React from "react";
 import "../stylecss/adminListDrivers.css";
 
 function ADListDrivers() {
-  return (
-    <div className="drv-container">
-      <h2 className="drv-title">🚗 Danh Sách Tài Xế</h2>
 
-      <table className="drv-table">
-        <thead>
-          <tr>
-            <th>STT</th>
-            <th>Mã Tài Xế</th>
-            <th>Họ Tên</th>
-            <th>Số Bằng Lái</th>
-            <th>Số ĐT</th>
-            <th>Tuỳ Chỉnh</th>
-          </tr>
-        </thead>
-
-        <tbody>
+  const DriverRow = (
           <tr>
             <td>1</td>
             <td>TX001</td>
@@ -30,6 +15,27 @@ function ADListDrivers() {
               <button className="delete-btn">Xoá</button>
             </td>
           </tr>
+  );
+
+  return (
+    <div className="drv-container">
+      <h2 className="drv-title">🚗 Danh Sách Tài Xế</h2>
+
+      <table className="drv-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>ID thông tin</th>
+            <th>Email</th>
+            <th>Họ Tên</th>
+            <th>SĐT</th>
+            <th>citizenId</th>
+            <th>Mã Bằng Lái</th>
+            <th>Tuỳ Chỉnh</th>
+          </tr>
+        </thead>
+
+        <tbody>
           <tr>
             <td>2</td>
             <td>TX002</td>
@@ -45,8 +51,7 @@ function ADListDrivers() {
       </table>
 
       <div className="drv-actions">
-        <button className="add-btn">➕ Thêm Tài Xế</button>
-        <button className="save-btn">💾 Lưu Thay Đổi</button>
+        <button className="add-btn">➕ Sửa thông tin</button>
       </div>
     </div>
   );
