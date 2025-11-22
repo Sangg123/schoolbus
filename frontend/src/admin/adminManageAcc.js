@@ -4,7 +4,7 @@ import getalluser from "../api/getalluser";
 import "../stylecss/general.css";
 import addUserapi from "../api/addUser"
 import modifyUserApi from "../api/modifyUser"
-
+import deleteUserApi from "../api/deleteUser"
 
 
 //todo: reload after add account
@@ -39,6 +39,16 @@ export default function ADManageAcc() {
     setModifyUser(prev => ({ ...prev, [name]: value }));
   };
 
+  const deleteUserFunction = async (id, email) => {
+    try {
+      if(window.confirm(`Xóa người dùng ${email}?`)){
+        const response = await deleteUserApi(id);
+      }
+    } catch (err) {
+      console.log(err.response);
+    }
+  }
+
   const modifyUserMenu = (
     <div className="popup-overlay">
       <div className="adduser popup">
@@ -49,7 +59,7 @@ export default function ADManageAcc() {
         <input type="tel" name="phone" placeholder="Số điện thoại" value={modifyUser.phone} onChange={handleModifyChange}></input>
         <input type="text" name="role" placeholder="Vai trò" value={modifyUser.role} onChange={handleModifyChange}></input>
         <div className="popup-actions">
-          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => { requestModifyUser(modifyUser); getalluserFunction()}}></input>
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => { await requestModifyUser(modifyUser); setModifyUserMenu(false); await getalluserFunction()}}></input>
           <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => {setModifyUserMenu(false)}}></input>
         </div>
       </div>
@@ -70,7 +80,7 @@ export default function ADManageAcc() {
         <td>{role}</td>
         <td>
           <button className="edit-btn" onClick={() => {setModifyUserMenu(true); setModifyUser(user)}}>Sửa</button>
-          <button className="delete-btn">Xoá</button>
+          <button className="delete-btn" onClick={async () => {await deleteUserFunction(id, email); await getalluserFunction()}}>Xoá</button>
         </td>
 
       </tr>
@@ -113,7 +123,7 @@ export default function ADManageAcc() {
         <input type="tel" name="phone" placeholder="Số điện thoại" value={createUser.phone} onChange={handleChange}></input>
         <input type="text" name="role" placeholder="Vai trò" value={createUser.role} onChange={handleChange}></input>
         <div className="popup-actions">
-          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => { requestAddUser(createUser); getalluserFunction() }}></input>
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => {await requestAddUser(createUser); setShowAddUser(false); await getalluserFunction() }}></input>
           <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
         </div>
       </div>

@@ -1,9 +1,9 @@
 import api from './api'
 
-const modifyuser = async (id, email, password, fullName, phone, role) => {
+const modifyuser = async (id) => {
     var response = null;
     try {
-        response = await api.patch(`/users/${id}`, {email, password, fullName, phone, role});
+        response = await api.delete(`/users/${id}`);
         return response;
     } catch (err) {
         console.error(err);
