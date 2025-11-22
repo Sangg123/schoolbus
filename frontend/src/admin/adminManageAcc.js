@@ -3,6 +3,7 @@ import "../stylecss/adminManageAcc.css";
 import getalluser from "../api/getalluser";
 import "../stylecss/general.css";
 import addUserapi from "../api/addUser"
+import modifyUserApi from "../api/modifyUser"
 
 
 
@@ -14,6 +15,11 @@ export default function ADManageAcc() {
   const [createUser, setCreateUser] = useState({
     email: "", password: "", fullNawme: "", phone: "", role: ""
   });
+  const [modifyUser, setModifyUser] = useState({
+    email: "", password: "", fullNawme: "", phone: "", role: ""
+  });
+  const [showModifyUserMenu, setModifyUserMenu] = useState(false);
+
 
   const getalluserFunction = async () => {
     try {
@@ -28,6 +34,28 @@ export default function ADManageAcc() {
     getalluserFunction();
   }, [])
 
+  const handleModifyChange = (e) => {
+    const { name, value } = e.target;
+    setModifyUser(prev => ({ ...prev, [name]: value }));
+  };
+
+  const modifyUserMenu = (
+    <div className="popup-overlay">
+      <div className="adduser popup">
+        <h2>Sửa thông tin người dùng</h2>
+        <input type="email" name="email" placeholder="Email" value={modifyUser.email} onChange={handleModifyChange}></input>
+        <input type="password" name="password" placeholder="Mật khẩu" value={null} onChange={handleModifyChange}></input>
+        <input type="text" name="fullName" placeholder="Tên người dùng" value={modifyUser.fullName} onChange={handleModifyChange}></input>
+        <input type="tel" name="phone" placeholder="Số điện thoại" value={modifyUser.phone} onChange={handleModifyChange}></input>
+        <input type="text" name="role" placeholder="Vai trò" value={modifyUser.role} onChange={handleModifyChange}></input>
+        <div className="popup-actions">
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={() => { requestModifyUser(modifyUser); getalluserFunction()}}></input>
+          <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => {setModifyUserMenu(false)}}></input>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderUserRow = (user, index) => {
     const { id, email, fullName, phone, role } = user ?? {};
     const key = id ?? index;
@@ -41,9 +69,10 @@ export default function ADManageAcc() {
         <td>{phone ?? "-"}</td>
         <td>{role}</td>
         <td>
-          <button className="edit-btn">Sửa</button>
+          <button className="edit-btn" onClick={() => {setModifyUserMenu(true); setModifyUser(user)}}>Sửa</button>
           <button className="delete-btn">Xoá</button>
         </td>
+
       </tr>
     );
   };
@@ -58,7 +87,7 @@ export default function ADManageAcc() {
     const { name, value } = e.target;
     setCreateUser(prev => ({ ...prev, [name]: value }));
   };
-
+  
   const requestAddUser = async (createUser) => {
     try {
       const response = await addUserapi(createUser.email, createUser.password, createUser.fullName, createUser.phone, createUser.role);
@@ -73,11 +102,11 @@ export default function ADManageAcc() {
 
   };
 
-
   //todo: add validation
   const addUser = (
     <div className="popup-overlay">
       <div className="adduser popup">
+        <h2>Thêm người dùng</h2>
         <input type="email" name="email" placeholder="Email" value={createUser.email} onChange={handleChange}></input>
         <input type="password" name="password" placeholder="Mật khẩu" value={createUser.password} onChange={handleChange}></input>
         <input type="text" name="fullName" placeholder="Tên người dùng" value={createUser.fullName} onChange={handleChange}></input>
@@ -90,6 +119,15 @@ export default function ADManageAcc() {
       </div>
     </div>
   );
+
+  //modify user
+  const requestModifyUser = async (user) => {
+    try {
+      const response = await modifyUserApi(user.id, user.email, user.password, user.fullName, user.phone, user.role);
+    } catch (err) {
+      console.error(err.response)
+    }
+  }
 
   return (
     <div className="acc-container">
@@ -111,6 +149,7 @@ export default function ADManageAcc() {
       <div className="acc-actions">
         <button className="add-btn" onClick={() => { setShowAddUser(true) }}>➕ Thêm Tài Khoản</button>
         {showadduser && addUser}
+        {showModifyUserMenu && modifyUserMenu}
       </div>
 
     </div>
