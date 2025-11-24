@@ -3,7 +3,7 @@ import api from './api'
 const createBus = async (licensePlate, capacity, currentLat, currentLng) => {
     var response = null;
     try {
-        response = await api.creaet("/bus", {licensePlate, capacity, currentLat, currentLng});
+        response = await api.post("/bus", {licensePlate, capacity, currentLat, currentLng});
         return response;
     } catch (err) {
         console.error(err);

@@ -109,7 +109,7 @@ const correctStudentMenu = () => {
         <input name="fullName" value={correctStudent.fullName} onChange={handleEditChange} placeholder="Họ tên" />
         <input name="classes" value={correctStudent.classes} onChange={handleEditChange} placeholder="Lớp" />
         <div className="popup-actions">
-          <button onClick={() => correction(correctStudent.id, correctStudent.fullName, correctStudent.studentCode, correctStudent.classes)} className="btn">Xác nhận</button>
+          <button onClick={() => correction(correctStudent.id, correctStudent.fullName,correctStudent.classes, correctStudent.studentCode)} className="btn">Xác nhận</button>
           <button onClick={() => { setCorrection(false) }} className="btn">Hủy</button>
         </div>
       </div>
@@ -117,9 +117,10 @@ const correctStudentMenu = () => {
   );
 }
 
-const correction = async (id, fullName, studentCode, classes) => {
+const correction = async (id, fullName, classes, studentCode) => {
   try {
-    const response = await correctStudentApi(id, fullName, studentCode, classes);
+    await correctStudentApi(id, fullName, classes, studentCode);
+    await getAllStudent();  // thêm dòng này để refresh UI
     //clear correction list 
     setCorrectStudent({ fullName: "", classes: "", studentCode: "" })
     setCorrection(false);
