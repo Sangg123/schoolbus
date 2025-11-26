@@ -1,14 +1,17 @@
-import api from './api'
+import api from "./api";
 
-const getAllDriver = async (userId, citizenId, licenseId) => {
-    var response = null;
-    try {
-        response = await api.post("/dirver", {userId, citizenId, licenseId});
-        return response;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+const createDriver = async (userId, data) => {
+  try {
+    // data = { citizenId, licenseId }
+    const response = await api.post("/driver", {
+      userId,
+      ...data,
+    });
+    return response.data;
+  } catch (err) {
+    console.error("CREATE DRIVER ERROR:", err);
+    throw err;
+  }
 };
 
-export default getAllDriver;
+export default createDriver;
