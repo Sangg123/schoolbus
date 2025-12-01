@@ -1,3 +1,4 @@
+/* Container chung */
 .drv-container {
   margin: 30px auto;
   width: 90%;
@@ -9,6 +10,7 @@
   font-family: "Segoe UI", sans-serif;
 }
 
+/* Tiêu đề */
 .drv-title {
   text-align: center;
   color: #333;
@@ -16,6 +18,7 @@
   margin-bottom: 20px;
 }
 
+/* Table chung */
 .drv-table {
   width: 100%;
   border-collapse: collapse;
@@ -23,64 +26,170 @@
   background-color: #fafafa;
 }
 
-.drv-table th {
-  background-color: #007bff;
-  color: white;
-  padding: 10px;
+.drv-table th,
+.drv-table td {
+  border: 1px solid #ddd;
+  padding: 8px 10px;
   text-align: center;
 }
 
-.drv-table td {
-  text-align: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+.drv-table th {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
 }
 
 .drv-table tr:hover {
   background-color: #f1f1f1;
 }
 
-.drv-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
+/* Nút chức năng */
 .add-btn,
 .save-btn,
 .edit-btn,
-.delete-btn {
+.delete-btn,
+.route-btn {
   border: none;
-  padding: 8px 14px;
+  padding: 6px 12px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
   transition: 0.25s;
+  margin: 2px;
 }
 
-.add-btn {
-  background-color: #28a745;
-  color: white;
-}
-
-.save-btn {
-  background-color: #17a2b8;
-  color: white;
-}
-
-.edit-btn {
-  background-color: #ffc107;
-  color: #333;
-  margin-right: 5px;
-}
-
-.delete-btn {
-  background-color: #dc3545;
-  color: white;
-}
+.add-btn { background-color: #28a745; color: white; }
+.save-btn { background-color: #17a2b8; color: white; }
+.edit-btn { background-color: #ffc107; color: #333; }
+.delete-btn { background-color: #dc3545; color: white; }
+.route-btn { background-color: #6c757d; color: white; }
 
 .add-btn:hover { background-color: #218838; }
 .save-btn:hover { background-color: #138496; }
 .edit-btn:hover { background-color: #e0a800; }
 .delete-btn:hover { background-color: #c82333; }
+.route-btn:hover { background-color: #5a6268; }
+
+/* Khung popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup {
+  background: white;
+  padding: 20px 25px;
+  border-radius: 12px;
+  width: 600px;
+  max-width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.popup h3 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.popup input[type="text"],
+.popup input[type="number"],
+.popup select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Popup lộ trình */
+.itinerary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.itinerary-table th,
+.itinerary-table td {
+  border: 1px solid #ddd;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.itinerary-table th {
+  background-color: #17a2b8;
+  color: white;
+  font-weight: 600;
+}
+
+.add-stop {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.add-stop select,
+.add-stop input {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.add-stop button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.add-stop button:hover {
+  background-color: #218838;
+}
+
+/* Input số thứ tự nhỏ gọn */
+.itinerary-table input[type="number"] {
+  width: 50px;
+  padding: 4px 6px;
+  text-align: center;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* bảng lộ trình popup */
+.popup table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* cố định cột */
+}
+
+.popup th,
+.popup td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.popup th {
+  background-color: #f2f2f2;
+}

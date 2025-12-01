@@ -1,0 +1,112 @@
+.trip-container {
+  margin: 30px auto;
+  width: 90%;
+  max-width: 1000px;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: "Segoe UI", sans-serif;
+  position: relative;
+}
+
+/* ===== Tiêu đề ===== */
+.trip-title {
+  text-align: center;
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* ===== Nút tạo chuyến đi mới ===== */
+.create-trip-btn {
+  position: absolute;
+  top: 30px;
+  right: 60px;
+  background-color: #ffc107;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.create-trip-btn:hover {
+  background-color: #e0a800;
+  transform: scale(1.05);
+}
+
+/* ===== Bảng Trip ===== */
+.trip-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: #fafafa;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.trip-table th {
+  background-color: #17a2b8;
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+.trip-table td {
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.trip-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* ===== Nút sửa và xoá ===== */
+.update-trip-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.update-trip-btn:hover {
+  background-color: #218838;
+}
+
+.delete-trip-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+.delete-trip-btn:hover {
+  background-color: #c82333;
+}
+
+/* ===== Phần chi tiết Trip ===== */
+.trip-section {
+  margin-top: 40px;
+  border-top: 2px dashed #ddd;
+  padding-top: 20px;
+}
+
+.trip-subtitle {
+  color: #17a2b8;
+  font-size: 18px;
+  margin-bottom: 10px;
+}

@@ -5,7 +5,7 @@ function Sidebar({
   isLoggedIn, loaiTK, 
   onTrackingClick, onNotifiClick, 
   onViewCalendar, onStudentList, onReport, onWarning, 
-  onManageAcc, onListStudents, onListDrivers, onListBuses, onListRoutes, onManageCalendar, onMessage
+  onManageAcc, onListStudents, onListDrivers, onListBuses, onListRoutes, onListStopPoint, onManageCalendar, onManageTrip, onMessage
 }) {
   let menu;
 
@@ -22,10 +22,12 @@ function Sidebar({
               <li onClick={onListDrivers}>Danh Sách Tài Xế</li>
               <li onClick={onListBuses}>Danh Sách Xe Buýt</li>
               <li onClick={onListRoutes}>Danh Sách Tuyến Đường</li>
+              <li onClick={onListStopPoint}>Danh Sách Điểm Dừng</li>
             </ul>
           </li>
-
+    
           <li onClick={onManageCalendar}>Tạo/ Cập Nhật Lịch</li>
+          <li onClick={onManageTrip}>Quản Lý Chuyến Đi</li>
           <li onClick={onMessage}>Tin Nhắn</li>
         </ul>
     </div>;

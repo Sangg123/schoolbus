@@ -1,0 +1,154 @@
+/* Container chính */
+.stop-point-container {
+  margin: 30px auto;
+  width: 90%;
+  max-width: 1100px;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Tiêu đề */
+.title {
+  text-align: center;
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* Table danh sách */
+.stop-point-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background-color: #fafafa;
+}
+
+.stop-point-table th {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.stop-point-table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.stop-point-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Căn giữa nút Sửa / Xoá */
+.stop-point-table td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Nút chung */
+.add-btn,
+.save-btn,
+.edit-btn,
+.delete-btn,
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.25s;
+}
+
+/* Từng loại nút */
+.add-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.save-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* Hiệu ứng hover */
+.add-btn:hover { background-color: #218838; }
+.save-btn:hover { background-color: #138496; }
+.edit-btn:hover { background-color: #e0a800; }
+.delete-btn:hover { background-color: #c82333; }
+.btn:hover {
+  filter: brightness(0.9);
+}
+
+/* Hàng nút thêm / lưu */
+.stop-point-actions {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+/* Popup overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Popup nội dung */
+.popup {
+  background: #fff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  min-width: 320px;
+  max-width: 500px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.popup h3 {
+  margin: 0 0 10px;
+  text-align: center;
+}
+
+.popup input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 100%;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}

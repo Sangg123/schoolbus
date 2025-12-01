@@ -1,11 +1,119 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../stylecss/adminCreateCalendar.css";
 
-function ADCreateCalendar({onBackManageCalendar}) {
+import getAllRoute from "../api/getAllRoute";                       // lấy tất cả route
+import getAllBus from "../api/getAllBus";                           // lấy tất cả bus
+import getalluser from "../api/getalluser";                         // lấy tất cả user để lọc ra driver
+import getAllDriver from "../api/getAllDriver";                     // lấy tất cả driver
+import getAllStudent from "../api/getAllStudent";                   // lấy tất cả student
+import createSchedule from "../api/createSchedule";                 // tạo 1 schedule mới
+import createStudentSchedule from "../api/createStudentSchedule";   // tạo student schedule mới
+import createTrip from "../api/createTrip";                           // tạo trip mới
+
+function ADCreateCalendar({ onBackManageCalendar }) {
+  const [day, setDay] = useState(1); // backend: 1 = Thứ 2
+  const [startTime, setStartTime] = useState("06:30");
+  const [busId, setBusId] = useState(0);
+  const [driverId, setDriverId] = useState(0);
+  const [routeId, setRouteId] = useState(0);
+
+  const [buses, setBuses] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [students, setStudents] = useState([]);
+
+  const [showAssign, setShowAssign] = useState(false);
+  const [selectedStudents, setSelectedStudents] = useState([]);
+
+  const extractList = (resp) => {
+    if (!resp) return [];
+    if (Array.isArray(resp)) return resp;
+    if (Array.isArray(resp.data)) return resp.data;
+    return [];
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const busResp = await getAllBus();
+        setBuses(extractList(busResp));
+
+        const driverResp = await getAllDriver();
+        const usersResp = await getalluser("", "", "", "");
+        const users = extractList(usersResp);
+
+        const driversWithUser = users
+          .filter((u) => u.role === "driver")
+          .map((u) => {
+            const d = driverResp.find((dr) => Number(dr.userId) === Number(u.id));
+            return { id: d?.id ?? null, fullName: u.fullName };
+          })
+          .filter((d) => d.id !== null);
+        setDrivers(driversWithUser);
+
+        const routeResp = await getAllRoute();
+        setRoutes(extractList(routeResp));
+
+        const studentResp = await getAllStudent();
+        setStudents(extractList(studentResp));
+      } catch (err) {
+        console.error("Load data error:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      if (!busId || !driverId || !routeId) {
+        alert("Vui lòng chọn xe, tài xế và tuyến!");
+        return;
+      }
+
+      // 1) Tạo schedule
+      const scheduleResp = await createSchedule({
+        dayOfWeek: day,
+        startTime,
+        busId,
+        driverId,
+        routeId,
+      });
+
+      const scheduleId = scheduleResp?.id;
+      if (!scheduleId) {
+        alert("Không lấy được scheduleId!");
+        return;
+      }
+
+      // 2) Gán học sinh
+      for (const studentId of selectedStudents) {
+        await createStudentSchedule(studentId, scheduleId, null, null);
+      }
+
+      // 3)Tạo trip mặc định
+      await createTrip({
+        scheduleId,
+        tripDate: new Date().toISOString(), // ví dụ ngày hôm nay
+        currentStatus: "pending",
+      });
+
+      alert("Tạo lịch + phân công học sinh thành công!");
+      onBackManageCalendar();
+    } catch (err) {
+        if (err.response?.status === 409) {
+          alert("Tuyến này đã có lịch trong ngày này! Vui lòng chọn ngày hoặc tuyến khác.");
+          return;
+        }
+
+        console.error(err);
+        alert("Tạo lịch thất bại!");
+      }
+  };
+
   return (
     <div className="create-calendar-container">
       <h2 className="title">📅 Tạo Lịch Mới</h2>
-
       <button onClick={onBackManageCalendar} className="back-btn">
         ← Quay Lại
       </button>
@@ -13,104 +121,113 @@ function ADCreateCalendar({onBackManageCalendar}) {
       <div className="form-section">
         <div className="form-row">
           <label>Chọn Thứ:</label>
-          <select>
-            <option>Thứ 2</option>
-            <option>Thứ 3</option>
-            <option>Thứ 4</option>
-            <option>Thứ 5</option>
-            <option>Thứ 6</option>
-            <option>Thứ 7</option>
+          <select value={day} onChange={(e) => setDay(Number(e.target.value))}>
+            {[
+              { label: "Thứ 2", value: 1 },
+              { label: "Thứ 3", value: 2 },
+              { label: "Thứ 4", value: 3 },
+              { label: "Thứ 5", value: 4 },
+              { label: "Thứ 6", value: 5 },
+              { label: "Thứ 7", value: 6 },
+            ].map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-row">
           <label>Chọn Thời Gian Bắt Đầu:</label>
-          <select>
-            <option>06:30</option>
-            <option>11:00</option>
-            <option>12:30</option>
-            <option>17:00</option>
-          </select>
+          <input
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+          />
         </div>
 
         <div className="form-row">
           <label>Chọn Xe:</label>
-          <select>
-            <option>1</option>
-            <option>2</option>
+          <select value={busId} onChange={(e) => setBusId(Number(e.target.value))}>
+            <option value={0}>-- Chọn Xe --</option>
+            {buses.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.licensePlate}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-row">
           <label>Chọn Tài Xế:</label>
-          <select>
-            <option>Nguyễn Văn Tài</option>
-            <option>Trần Văn Lái</option>
+          <select
+            value={driverId}
+            onChange={(e) => setDriverId(Number(e.target.value))}
+          >
+            <option value={0}>-- Chọn Tài Xế --</option>
+            {drivers.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.fullName}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-row">
           <label>Chọn Tuyến:</label>
-          <select>
-            <option>Tuyến A - Quận 1 đến Trường DEF</option>
-            <option>Tuyến B - Quận 7 đến Trường DEF</option>
+          <select
+            value={routeId}
+            onChange={(e) => setRouteId(Number(e.target.value))}
+          >
+            <option value={0}>-- Chọn Tuyến --</option>
+            {routes.map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
+            ))}
           </select>
         </div>
 
         <div className="form-row">
-          <label>Chọn Loại:</label>
-          <select>
-            <option>Đón</option>
-            <option>Trả</option>
-          </select>
-        </div>
-
-        <div className="form-row">
-          <button type="button" className="assign-btn">
+          <button
+            type="button"
+            className="assign-btn"
+            onClick={() => setShowAssign(true)}
+          >
             👥 Phân Công Học Sinh
           </button>
         </div>
       </div>
 
-      {/* Lộ trình */}
-      <div className="route-section">
-        <h3 className="section-title">🛣️ Thứ Tự Lộ Trình</h3>
-        <table className="route-table">
-          <thead>
-            <tr>
-              <th>Thứ Tự</th>
-              <th>Địa Chỉ Dừng</th>
-              <th>Giờ Dự Kiến</th>
-              <th>Tùy Chỉnh</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><input type="text" placeholder="Nhập thứ tự dừng" /></td>
-              <td>123 Nguyễn Trãi</td>
-              <td><input type="time" /></td>
-              <td><button className="delete-btn">Xoá</button></td>
-            </tr>
-            <tr>
-              <td><input type="text" placeholder="Nhập thứ tự dừng" /></td>
-              <td>45 Lê Lợi</td>
-              <td><input type="time" /></td>
-              <td><button className="delete-btn">Xoá</button></td>
-            </tr>
-            <tr>
-              <td><input type="text" placeholder="Nhập thứ tự dừng" /></td>
-              <td>456 Nguyễn Văn Cừ</td>
-              <td><input type="time" /></td>
-              <td><button className="delete-btn">Xoá</button></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <button type="button" className="add-btn">➕ Thêm điểm dừng</button>
-      </div>
+      {showAssign && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h3>Chọn Học Sinh</h3>
+            <div className="student-list">
+              {students.map((s) => (
+                <div key={s.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedStudents.includes(s.id)}
+                    onChange={(e) =>
+                      setSelectedStudents((prev) =>
+                        e.target.checked
+                          ? [...prev, s.id]
+                          : prev.filter((x) => x !== s.id)
+                      )
+                    }
+                  />
+                  {s.fullName}
+                </div>
+              ))}
+            </div>
+            <button onClick={() => setShowAssign(false)}>Xong</button>
+          </div>
+        </div>
+      )}
 
       <div className="button-row">
-        <button type="submit" className="save-btn">
+        <button type="button" className="save-btn" onClick={handleSave}>
           💾 Tạo Lịch
         </button>
       </div>

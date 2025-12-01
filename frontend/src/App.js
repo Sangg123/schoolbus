@@ -17,8 +17,10 @@ import ADListDrivers from "./admin/adminListDrivers";
 import ADMessage from "./admin/adminMessage";
 import ADListBus from "./admin/adminListBuses";
 import ADListRoute from "./admin/adminListRoutes";
+import ADListStopPoint from "./admin/adminListStopPoint";
 import ADManageCalendar from "./admin/adminManageCalendar";
 import ADCreateCalendar from "./admin/adminCreateCalendar";
+import ADManageTrip from "./admin/adminManageTrip";
 
 import login from './api/login'
 
@@ -40,8 +42,10 @@ function App() {
   const [showListDriver, setShowListDriver] = useState(false);
   const [showListBus, setShowListBus] = useState(false);
   const [showListRoute, setShowListRoute] = useState(false);
+  const [showStopPoint, setShowStopPoint] = useState(false);
   const [showManageCalendar, setShowManageCalendar] = useState (false);
   const [showCreateCalendar, setShowCreateCalendar] = useState(false);
+  const [showManageTrip, setShowManageTrip] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [userInfo, setUserInfo] = useState("");
 
@@ -78,8 +82,10 @@ function App() {
     setShowListDriver(false);
     setShowListBus(false);
     setShowListRoute(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
 
     //xoa du lieu local va session nguoi dung
@@ -130,8 +136,10 @@ function App() {
     setShowListDriver(false);
     setShowListBus(false);
     setShowListRoute(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewListStudent = ()=>{
@@ -140,8 +148,10 @@ function App() {
     setShowListDriver(false);
     setShowListBus(false);
     setShowListRoute(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewListDriver = ()=>{
@@ -150,8 +160,10 @@ function App() {
     setShowListStudent(false);
     setShowListBus(false);
     setShowListRoute(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewListBus = ()=>{
@@ -160,8 +172,10 @@ function App() {
     setShowAccount(false);
     setShowListStudent(false);
     setShowListRoute(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewListRoute = ()=>{
@@ -170,8 +184,22 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
+    setShowMessage(false);
+  }
+  const showViewStopPoint = ()=>{
+    setShowStopPoint(true);
+    setShowListRoute(false);
+    setShowListBus(false);
+    setShowListDriver(false);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowManageCalendar(false);
+    setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewManageCalendar = ()=>{
@@ -181,7 +209,9 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowStopPoint(false);
     setShowCreateCalendar(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewCreateCalendar = ()=>{
@@ -190,8 +220,10 @@ function App() {
     setShowListRoute(false);
     setShowListBus(false);
     setShowListDriver(false);
+    setShowStopPoint(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowManageTrip(false);
     setShowMessage(false);
   }
   const showViewMessage= ()=>{
@@ -201,6 +233,20 @@ function App() {
     setShowListStudent(false);
     setShowListRoute(false);
     setShowListBus(false);
+    setShowStopPoint(false);
+    setShowManageCalendar(false);
+    setShowCreateCalendar(false);
+    setShowManageTrip(false);
+  }
+  const showViewManageTrip= ()=>{
+    setShowManageTrip(true);
+    setShowMessage(false);
+    setShowListDriver(false);
+    setShowAccount(false);
+    setShowListStudent(false);
+    setShowListRoute(false);
+    setShowListBus(false);
+    setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
   }
@@ -235,7 +281,9 @@ function App() {
           onListDrivers={showViewListDriver}
           onListBuses={showViewListBus}
           onListRoutes={showViewListRoute}
+          onListStopPoint={showViewStopPoint}
           onManageCalendar={showViewManageCalendar}
+          onManageTrip={showViewManageTrip}
           onMessage={showViewMessage}
         />
 
@@ -279,6 +327,9 @@ function App() {
           {/* Popup List Route */}
           {showListRoute && (<ADListRoute/>)}
 
+          {/* Popup List Stop Point */}
+          {showStopPoint && (<ADListStopPoint/>)}
+
           {/* Popup Manage Calendar */}
           { showManageCalendar && (<ADManageCalendar
             onCreateCalendar={showViewCreateCalendar}
@@ -286,6 +337,11 @@ function App() {
           
           {/* Popup Create Calendar */}
           {showCreateCalendar && (<ADCreateCalendar
+            onBackManageCalendar={showViewManageCalendar}
+          />)}
+
+          {/* Popup Manage Trip */}
+          {showManageTrip && (<ADManageTrip
             onBackManageCalendar={showViewManageCalendar}
           />)}
 
