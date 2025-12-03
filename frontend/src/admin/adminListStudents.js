@@ -1,178 +1,249 @@
 import React, { useEffect, useState } from "react";
 import "../stylecss/adminListStudents.css";
-import createStudentApi from "../api/createStudent";
+
 import getAllStudentApi from "../api/getAllStudent";
 import correctStudentApi from "../api/correctStudent";
-import deleteStudentApi from "../api/deleteStudent"
+import getAllParentStudentApi from "../api/getAllParentStudent";
+import getalluser from "../api/getalluser";
+import getAllParentsApi from "../api/getAllParent";
+import createParentStudentApi from "../api/createParentStudent";
+import deleteParentStudentApi from "../api/deleteParentStudent";
 
-function ADListStudents() {
+export default function ADListStudents() {
   const [students, setStudents] = useState([]);
-  const [showAdd, setShowAdd] = useState(false);
-  const [student, setStudent] = useState({ fullName: "", classes: "", studentCode: "" });
-  const [needCorrection, setCorrection] = useState(false);
-  const [correctStudent, setCorrectStudent] = useState({ fullName: "", classes: "", studentCode: "" });
+  const [allParents, setAllParents] = useState([]);
+  const [allParentStudent, setAllParentStudent] = useState([]);
 
-  const getAllStudent = async () => {
+  const [editingStudent, setEditingStudent] = useState(null);
+  const [selectedParents, setSelectedParents] = useState([]);
+  const [showParentPopup, setShowParentPopup] = useState(false);
+
+  // -------------------- LOAD DATA --------------------
+  const loadStudents = async () => {
     try {
       const resp = await getAllStudentApi();
-      const raw = resp?.data ?? [];
-      // normalize server "class" field to "classes"
-      const normalized = raw.map(s => ({
-        id: s.id,
-        fullName: s.fullName,
-        studentCode: s.studentCode,
-        classes: s["class"] ?? s.classes ?? "" // prefer server "class"
-      }));
-      setStudents(normalized);
+      setStudents(resp?.data ?? []);
     } catch (err) {
-      console.error("fetch students:", err);
+      console.error("❌ Lỗi loadStudents:", err);
     }
   };
 
-  useEffect(() => {
-    getAllStudent();
-  }, []);
+  const loadParents = async () => {
+  try {
+    const usersResp = await getalluser();
+    const parentsResp = await getAllParentsApi();
+    const psResp = await getAllParentStudentApi();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStudent(prev => ({ ...prev, [name]: value }));
-  };
+    // Safe fallback: nếu backend trả mảng trực tiếp thay vì { data: [...] }
+    const usersData = usersResp?.data ?? usersResp ?? [];
+    const parentsData = parentsResp?.data ?? parentsResp ?? [];
+    const parentStudentData = psResp?.data ?? psResp ?? [];
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setCorrectStudent(prev => ({ ...prev, [name]: value }));
-  };
+    console.log("📌 usersData:", usersData);
+    console.log("📌 parentsData:", parentsData);
+    console.log("📌 parent-student relations:", parentStudentData);
 
-  const submitAdd = async () => {
-    try {
-      const response = await createStudentApi(student.fullName, student.classes, student.studentCode);
-      const createdRaw = response?.data;
-      if (createdRaw) {
-        const created = {
-          id: createdRaw.id,
-          fullName: createdRaw.fullName,
-          studentCode: createdRaw.studentCode,
-          classes: createdRaw["class"] ?? createdRaw.classes ?? ""
-        };
-        setStudents(prev => [created, ...prev]);
-      } else {
-        const all = await getAllStudentApi();
-        const normalized = (all?.data ?? []).map(s => ({
-          id: s.id,
-          fullName: s.fullName,
-          studentCode: s.studentCode,
-          classes: s["class"] ?? s.classes ?? ""
-        }));
-        setStudents(normalized);
-      }
-      setStudent({ fullName: "", classes: "", studentCode: "" });
-      setShowAdd(false);
-    } catch (err) {
-      console.error("create student:", err);
-      alert("Create student failed");
-    }
-  };
+    // Join parent + user
+    const parentUsers = parentsData.map(parent => {
+      const user = usersData.find(u => Number(u.id) === Number(parent.userId));
+      if (!user) console.warn(`⚠️ Không tìm thấy userId=${parent.userId} cho parentId=${parent.id}`);
+      return {
+        id: parent.id,            // giữ parentId
+        userId: parent.userId,    // optional, nếu cần
+        fullName: user?.fullName ?? `Không có tên (${parent.userId})`
+      };
+    });
 
-  const studentRow = (s, i) => {
-    const { id, fullName, studentCode, classes } = s ?? {};
-    return (
-      <tr key={id ?? i}>
-        <td>{i + 1}</td>
-        <td>{id}</td>
-        <td>{studentCode}</td>
-        <td>{fullName}</td>
-        <td>{classes}</td>
-        <td>
-          <button className="edit-btn" onClick={() => { setCorrection(true); setCorrectStudent(s) }}>Sửa</button>
-          <button className="delete-btn" onClick={async () => { await deleteStudent(id, studentCode) ; await getAllStudent() }}>Xoá</button>
-      </td>
-    </tr >
-  );
+    console.log("📌 Loaded parents:", parentUsers);
+
+    setAllParents(parentUsers);
+    setAllParentStudent(parentStudentData);
+  } catch (err) {
+    console.error("❌ Lỗi loadParents:", err);
+  }
 };
 
-const deleteStudent = async (id, studentCode) => {
-  try {
-    if (window.confirm(`Xóa học sinh với mã ${studentCode}?`)) {
-      const response = await deleteStudentApi(id);
-    }
-  } catch (err) {
-    console.error(err.response);
-  }
-}
 
-const correctStudentMenu = () => {
+
+  useEffect(() => {
+    loadStudents();
+    loadParents();
+  }, []);
+
+  // -------------------- HANDLE EDIT --------------------
+  const openEdit = (student) => {
+    const psList = allParentStudent.filter(ps => ps.studentId === student.id);
+    const parentIds = psList.map(ps => ps.parentId).filter(Boolean);
+
+    setEditingStudent(student);
+    setSelectedParents(parentIds);
+  };
+
+  const toggleParent = (parentId) => {
+    setSelectedParents(prev =>
+      prev.includes(parentId) ? prev.filter(id => id !== parentId) : [...prev, parentId]
+    );
+  };
+
+  const submitEdit = async () => {
+    if (!editingStudent) return;
+
+    try {
+      console.log("📌 Xác nhận sửa học sinh:", editingStudent);
+      console.log("📌 Selected parents:", selectedParents);
+
+      // Cập nhật học sinh
+      await correctStudentApi(
+        editingStudent.id,
+        editingStudent.fullName,
+        editingStudent.class,
+        editingStudent.studentCode
+      );
+      console.log("✅ Đã cập nhật thông tin học sinh");
+
+      // Thêm quan hệ parent-student mới
+      for (const parentId of selectedParents) {
+        const exist = allParentStudent.find(
+          ps => ps.studentId === editingStudent.id && ps.parentId === parentId
+        );
+        if (!exist) {
+          console.log(`➡️ Tạo quan hệ mới: studentId=${editingStudent.id}, parentId=${parentId}`);
+          await createParentStudentApi({
+            studentId: editingStudent.id,
+            parentId,
+            relationship: "parent"
+          });
+          console.log(`✅ Tạo quan hệ thành công: parentId=${parentId}`);
+        }
+      }
+
+      // Xóa quan hệ cũ không còn chọn
+      for (const ps of allParentStudent.filter(ps => ps.studentId === editingStudent.id)) {
+        if (!selectedParents.includes(ps.parentId)) {
+          console.log(`❌ Xoá quan hệ: studentId=${editingStudent.id}, parentId=${ps.parentId}`);
+          await deleteParentStudentApi(ps.parentId, editingStudent.id);
+          console.log(`✅ Xoá quan hệ thành công: parentId=${ps.parentId}`);
+        }
+      }
+
+      // Load lại dữ liệu
+      await loadStudents();
+      await loadParents();
+
+      // Reset state
+      setEditingStudent(null);
+      setSelectedParents([]);
+      setShowParentPopup(false);
+
+      console.log("🎉 Hoàn tất cập nhật học sinh và phụ huynh");
+      alert("🎉 Cập nhật học sinh và phụ huynh thành công!");
+    } catch (err) {
+      console.error("❌ Lỗi submitEdit:", err);
+      alert("Cập nhật thất bại! Xem console để biết chi tiết.");
+    }
+  };
+
+  // -------------------- RENDER --------------------
   return (
-    <div className="popup-overlay correctStudent">
-      <div className="popup">
-        <h3>Sửa học sinh</h3>
-        <input name="studentCode" value={correctStudent.studentCode} onChange={handleEditChange} placeholder="Mã học sinh" />
-        <input name="fullName" value={correctStudent.fullName} onChange={handleEditChange} placeholder="Họ tên" />
-        <input name="classes" value={correctStudent.classes} onChange={handleEditChange} placeholder="Lớp" />
-        <div className="popup-actions">
-          <button onClick={() => correction(correctStudent.id, correctStudent.fullName,correctStudent.classes, correctStudent.studentCode)} className="btn">Xác nhận</button>
-          <button onClick={() => { setCorrection(false) }} className="btn">Hủy</button>
+    <div className="stu-container">
+      <h2 className="stu-title">🎓 Danh Sách Học Sinh</h2>
+      <table className="stu-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>ID</th>
+            <th>Mã HS</th>
+            <th>Họ tên</th>
+            <th>Lớp</th>
+            <th>Tuỳ Chỉnh</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((s, i) => (
+            <tr key={s.id}>
+              <td>{i + 1}</td>
+              <td>{s.id}</td>
+              <td>{s.studentCode}</td>
+              <td>{s.fullName}</td>
+              <td>{s.class}</td>
+              <td>
+                <button className="edit-btn" onClick={() => openEdit(s)}>Sửa</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Popup sửa học sinh */}
+      {editingStudent && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h3>Sửa học sinh</h3>
+            <input
+              value={editingStudent.studentCode}
+              onChange={e => setEditingStudent({ ...editingStudent, studentCode: e.target.value })}
+              placeholder="Mã HS"
+            />
+            <input
+              value={editingStudent.fullName}
+              onChange={e => setEditingStudent({ ...editingStudent, fullName: e.target.value })}
+              placeholder="Họ tên"
+            />
+            <input
+              value={editingStudent.class}
+              onChange={e => setEditingStudent({ ...editingStudent, class: e.target.value })}
+              placeholder="Lớp"
+            />
+
+            <button
+              className="btn"
+              onClick={() => {
+                console.log("📌 Mở popup chọn phụ huynh, allParents:", allParents);
+                setShowParentPopup(true);
+              }}
+            >
+              Chọn phụ huynh ({selectedParents.length} đã chọn)
+            </button>
+
+            <div className="popup-actions">
+              <button className="btn" onClick={submitEdit}>Xác nhận</button>
+              <button className="btn" onClick={() => { setEditingStudent(null); setSelectedParents([]); }}>Hủy</button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Popup chọn phụ huynh */}
+      {showParentPopup && (
+        <div className="popup-overlay parent-popup">
+          <div className="popup">
+            <h3>Chọn phụ huynh cho {editingStudent?.fullName}</h3>
+            <div className="parent-checkboxes">
+              {allParents.map(p => (
+                <label key={p.id}>
+                  <input
+                    type="checkbox"
+                    checked={selectedParents.includes(p.id)}
+                    onChange={() => toggleParent(p.id)}
+                  />
+                  {p.fullName}
+                </label>
+              ))}
+            </div>
+            <div className="popup-actions">
+              <button
+                className="btn"
+                onClick={() => {
+                  console.log("📌 Xác nhận phụ huynh:", selectedParents);
+                  setShowParentPopup(false);
+                }}
+              >
+                Xác nhận
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-const correction = async (id, fullName, classes, studentCode) => {
-  try {
-    await correctStudentApi(id, fullName, classes, studentCode);
-    await getAllStudent();  // thêm dòng này để refresh UI
-    //clear correction list 
-    setCorrectStudent({ fullName: "", classes: "", studentCode: "" })
-    setCorrection(false);
-  } catch (err) {
-    console.error(err);
-    if (err.status === 409)
-      alert("thông tin chưa được thay đổi hoặc bị trùng lặp")
-  }
-}
-
-
-return (
-  <div className="stu-container">
-    <h2 className="stu-title">🎓 Danh Sách Học Sinh</h2>
-
-    <table className="stu-table">
-      <thead>
-        <tr>
-          <th>STT</th>
-          <th>ID</th>
-          <th>Mã Học Sinh</th>
-          <th>Họ Tên</th>
-          <th>Lớp</th>
-          <th>Tuỳ Chỉnh</th>
-        </tr>
-      </thead>
-      <tbody>
-        {students.map(studentRow)}
-      </tbody>
-    </table>
-
-    <div className="stu-actions">
-      <button className="add-btn" onClick={() => setShowAdd(true)}>➕ Thêm Học Sinh</button>
-    </div>
-
-    {showAdd && (
-      <div className="popup-overlay">
-        <div className="addstudent popup">
-          <h3>Thêm học sinh</h3>
-          <input name="studentCode" value={student.studentCode} onChange={handleChange} placeholder="Mã học sinh" />
-          <input name="fullName" value={student.fullName} onChange={handleChange} placeholder="Họ tên" />
-          <input name="classes" value={student.classes} onChange={handleChange} placeholder="Lớp" />
-          <div className="popup-actions">
-            <button onClick={submitAdd} className="btn">Xác nhận</button>
-            <button onClick={async () => { setShowAdd(false); setStudent({ fullName: "", classes: "", studentCode: "" }); getAllStudent() }} className="btn">Hủy</button>
-          </div>
-        </div>
-      </div>
-    )}
-    {needCorrection && correctStudentMenu()}
-  </div>
-);
-}
-
-export default ADListStudents;

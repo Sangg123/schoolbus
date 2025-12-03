@@ -13,6 +13,7 @@ import DRReport from "./drivers/driverReport";
 import DRWarning from "./drivers/driverWarning";
 import ADManageAcc from "./admin/adminManageAcc";
 import ADListStudents from "./admin/adminListStudents";
+import ADListParent from "./admin/adminListParent";
 import ADListDrivers from "./admin/adminListDrivers";
 import ADMessage from "./admin/adminMessage";
 import ADListBus from "./admin/adminListBuses";
@@ -39,6 +40,7 @@ function App() {
 
   const [showAccount, setShowAccount] = useState(false);
   const [showListStudent, setShowListStudent] = useState(false);
+  const [showListParent, setShowListParent] = useState(false);
   const [showListDriver, setShowListDriver] = useState(false);
   const [showListBus, setShowListBus] = useState(false);
   const [showListRoute, setShowListRoute] = useState(false);
@@ -79,6 +81,7 @@ function App() {
 
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListDriver(false);
     setShowListBus(false);
     setShowListRoute(false);
@@ -133,6 +136,7 @@ function App() {
   const showViewAcc = ()=>{
     setShowAccount(true);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListDriver(false);
     setShowListBus(false);
     setShowListRoute(false);
@@ -144,6 +148,20 @@ function App() {
   }
   const showViewListStudent = ()=>{
     setShowListStudent(true);
+    setShowListParent(false);
+    setShowAccount(false);
+    setShowListDriver(false);
+    setShowListBus(false);
+    setShowListRoute(false);
+    setShowStopPoint(false);
+    setShowManageCalendar(false);
+    setShowCreateCalendar(false);
+    setShowManageTrip(false);
+    setShowMessage(false);
+  }
+  const showViewListParent = ()=>{
+    setShowListParent(true);
+    setShowListStudent(false);
     setShowAccount(false);
     setShowListDriver(false);
     setShowListBus(false);
@@ -158,6 +176,7 @@ function App() {
     setShowListDriver(true);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListBus(false);
     setShowListRoute(false);
     setShowStopPoint(false);
@@ -171,6 +190,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListRoute(false);
     setShowStopPoint(false);
     setShowManageCalendar(false);
@@ -184,6 +204,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowStopPoint(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
@@ -197,6 +218,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowManageCalendar(false);
     setShowCreateCalendar(false);
     setShowManageTrip(false);
@@ -209,6 +231,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowStopPoint(false);
     setShowCreateCalendar(false);
     setShowManageTrip(false);
@@ -223,6 +246,7 @@ function App() {
     setShowStopPoint(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowManageTrip(false);
     setShowMessage(false);
   }
@@ -231,6 +255,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListRoute(false);
     setShowListBus(false);
     setShowStopPoint(false);
@@ -244,6 +269,7 @@ function App() {
     setShowListDriver(false);
     setShowAccount(false);
     setShowListStudent(false);
+    setShowListParent(false);
     setShowListRoute(false);
     setShowListBus(false);
     setShowStopPoint(false);
@@ -278,6 +304,7 @@ function App() {
 
           onManageAcc={showViewAcc}
           onListStudents={showViewListStudent}
+          onListParents={showViewListParent}
           onListDrivers={showViewListDriver}
           onListBuses={showViewListBus}
           onListRoutes={showViewListRoute}
@@ -317,6 +344,9 @@ function App() {
 
           {/* Popup List Student */}
           {showListStudent && (<ADListStudents/>)}
+
+          {/* Popup List Parent */}
+          {showListParent && (<ADListParent/>)}
 
           {/* Popup List Driver */}
           {showListDriver && (<ADListDrivers/>)}
