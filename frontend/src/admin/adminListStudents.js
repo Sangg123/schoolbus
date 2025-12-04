@@ -8,11 +8,20 @@ import getalluser from "../api/getalluser";
 import getAllParentsApi from "../api/getAllParent";
 import createParentStudentApi from "../api/createParentStudent";
 import deleteParentStudentApi from "../api/deleteParentStudent";
+import deleteStudent from "../api/deleteStudent";
+import createStudentApi from "../api/createStudent";
 
 export default function ADListStudents() {
   const [students, setStudents] = useState([]);
   const [allParents, setAllParents] = useState([]);
   const [allParentStudent, setAllParentStudent] = useState([]);
+
+  const [addingStudent, setAddingStudent] = useState(false);
+  const [newStudent, setNewStudent] = useState({
+    fullName: "",
+    class: "",
+    studentCode: ""
+  });
 
   const [editingStudent, setEditingStudent] = useState(null);
   const [selectedParents, setSelectedParents] = useState([]);
@@ -143,6 +152,60 @@ export default function ADListStudents() {
     }
   };
 
+  const submitNewStudent = async () => {
+    try {
+      const { studentCode, fullName, class: className } = newStudent;
+
+      if (!studentCode || !fullName || !className) {
+        alert("Vui lòng nhập đầy đủ thông tin!");
+        return;
+      }
+
+      await createStudentApi({
+        fullName,
+        class: className,
+        studentCode
+      });
+
+      await loadStudents();
+
+      setNewStudent({ fullName: "", class: "", studentCode: "" });
+      setAddingStudent(false);
+
+      alert("🎉 Thêm học sinh thành công!");
+    } catch (err) {
+      console.error("❌ Lỗi thêm học sinh:", err);
+      alert("Thêm học sinh thất bại!");
+    }
+  };
+
+
+  const handleDeleteStudent = async (id) => {
+  try {
+    if (window.confirm(`Bạn có chắc chắn muốn xoá học sinh ID ${id}?`)) {
+
+      // Xoá toàn bộ quan hệ parent-student trước
+      const related = allParentStudent.filter(ps => ps.studentId === id);
+      for (const ps of related) {
+        await deleteParentStudentApi(ps.parentId, id);
+      }
+
+      // Xoá học sinh
+      await deleteStudent(id);
+
+      // Reload danh sách
+      await loadStudents();
+      await loadParents();
+
+      alert("Đã xoá học sinh thành công!");
+    }
+  } catch (err) {
+    console.error("❌ Lỗi khi xoá học sinh:", err);
+    alert("Xoá học sinh thất bại!");
+  }
+};
+
+
   // -------------------- RENDER --------------------
   return (
     <div className="stu-container">
@@ -168,11 +231,49 @@ export default function ADListStudents() {
               <td>{s.class}</td>
               <td>
                 <button className="edit-btn" onClick={() => openEdit(s)}>Sửa</button>
+                <button className="delete-btn" onClick={() => handleDeleteStudent(s.id)}>Xoá</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      <div className="stu-actions">
+        <button className="add-btn" onClick={() => setAddingStudent(true)}>
+          ➕ Thêm Học Sinh
+        </button>
+      </div>
+      {/* Popup thêm học sinh */}
+      {addingStudent && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <h3>Thêm Học Sinh</h3>
+
+            <input
+              placeholder="Mã HS"
+              value={newStudent.studentCode}
+              onChange={(e) => setNewStudent({ ...newStudent, studentCode: e.target.value })}
+            />
+            <input
+              placeholder="Họ tên"
+              value={newStudent.fullName}
+              onChange={(e) => setNewStudent({ ...newStudent, fullName: e.target.value })}
+            />
+            <input
+              placeholder="Lớp"
+              value={newStudent.class}
+              onChange={(e) => setNewStudent({ ...newStudent, class: e.target.value })}
+            />
+
+            <div className="popup-actions">
+              <button className="btn" onClick={submitNewStudent}>Tạo</button>
+              <button className="btn" onClick={() => setAddingStudent(false)}>Hủy</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* Popup sửa học sinh */}
       {editingStudent && (
