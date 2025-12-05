@@ -42,7 +42,7 @@ export default function ADManageAcc() {
 
   const deleteUserFunction = async (id, email) => {
     try {
-      if(window.confirm(`Xóa người dùng ${email}?`)){
+      if (window.confirm(`Xóa người dùng ${email}?`)) {
         const response = await deleteUserApi(id);
       }
     } catch (err) {
@@ -60,8 +60,8 @@ export default function ADManageAcc() {
         <input type="tel" name="phone" placeholder="Số điện thoại" value={modifyUser.phone} onChange={handleModifyChange}></input>
         <input type="text" name="role" placeholder="Vai trò" value={modifyUser.role} onChange={handleModifyChange}></input>
         <div className="popup-actions">
-          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => { await requestModifyUser(modifyUser); setModifyUserMenu(false); await getalluserFunction()}}></input>
-          <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => {setModifyUserMenu(false)}}></input>
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => { await requestModifyUser(modifyUser); setModifyUserMenu(false); await getalluserFunction() }}></input>
+          <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setModifyUserMenu(false) }}></input>
         </div>
       </div>
     </div>
@@ -80,8 +80,8 @@ export default function ADManageAcc() {
         <td>{phone ?? "-"}</td>
         <td>{role}</td>
         <td>
-          <button className="edit-btn" onClick={() => {setModifyUserMenu(true); setModifyUser(user)}}>Sửa</button>
-          <button className="delete-btn" onClick={async () => {await deleteUserFunction(id, email); await getalluserFunction()}}>Xoá</button>
+          <button className="edit-btn" onClick={() => { setModifyUserMenu(true); setModifyUser(user) }}>Sửa</button>
+          <button className="delete-btn" onClick={async () => { await deleteUserFunction(id, email); await getalluserFunction() }}>Xoá</button>
         </td>
 
       </tr>
@@ -98,7 +98,7 @@ export default function ADManageAcc() {
     const { name, value } = e.target;
     setCreateUser(prev => ({ ...prev, [name]: value }));
   };
-  
+
   const requestAddUser = async (createUser) => {
     try {
       const response = await addUserapi(createUser.email, createUser.password, createUser.fullName, createUser.phone, createUser.role);
@@ -124,7 +124,7 @@ export default function ADManageAcc() {
         <input type="tel" name="phone" placeholder="Số điện thoại" value={createUser.phone} onChange={handleChange}></input>
         <input type="text" name="role" placeholder="Vai trò" value={createUser.role} onChange={handleChange}></input>
         <div className="popup-actions">
-          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => {await requestAddUser(createUser); setShowAddUser(false); await getalluserFunction() }}></input>
+          <input className="btn" type="button" name="confirm" value="Xác nhận" onClick={async () => { await requestAddUser(createUser); setShowAddUser(false); await getalluserFunction() }}></input>
           <input className="btn" type="button" name="closeAddUser" value="Hủy bỏ" onClick={() => { setShowAddUser(false); setCreateUser("") }}></input>
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function ADManageAcc() {
         {userTable}
       </table>
       <div className="acc-actions">
-        <button className="add-btn" onClick={() => { setShowAddUser(true) }}>➕ Thêm Tài Khoản</button>
+        <button className="add-btn" onClick={() => { setCreateUser({}); setShowAddUser(true) }}>➕ Thêm Tài Khoản</button>
         {showadduser && addUser}
         {showModifyUserMenu && modifyUserMenu}
       </div>
