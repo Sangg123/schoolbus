@@ -38,7 +38,7 @@ function Sidebar({
     <div className="sidebar">
       <ul>
         <li onClick={onViewCalendar}>Xem Lịch</li>
-        <li onClick={onStudentList}>Danh Sách Học Sinh</li>
+        <li onClick={onStudentList}>Danh Sách Học Sinh/Điểm Đón</li>
         <li onClick={onReport}>Báo Cáo</li>
         <li onClick={onWarning}>Cảnh Báo</li>
       </ul>
