@@ -24,6 +24,7 @@ import ADCreateCalendar from "./admin/adminCreateCalendar";
 import ADManageTrip from "./admin/adminManageTrip";
 
 import login from './api/login'
+import { LoadScript } from "@react-google-maps/api";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -45,14 +46,14 @@ function App() {
   const [showListBus, setShowListBus] = useState(false);
   const [showListRoute, setShowListRoute] = useState(false);
   const [showStopPoint, setShowStopPoint] = useState(false);
-  const [showManageCalendar, setShowManageCalendar] = useState (false);
+  const [showManageCalendar, setShowManageCalendar] = useState(false);
   const [showCreateCalendar, setShowCreateCalendar] = useState(false);
   const [showManageTrip, setShowManageTrip] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [userInfo, setUserInfo] = useState("");
 
   const handleLogin = async (username, password) => {
-    try{
+    try {
       const loginRequest = await login(username, password);
       const data = loginRequest.data;
       localStorage.setItem("userInfo", JSON.stringify(data));
@@ -60,15 +61,15 @@ function App() {
       setLoaiTK(data.user.role);
       setIsLoggedIn(true);
       setShowLogin(false);
-    } 
-    catch(err) {
+    }
+    catch (err) {
       if (err.status === 401)
         alert("Tài khoản hoặc mật khẩu không đúng");
     }
   };
 
 
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     setIsLoggedIn(false);
 
     setShowTracking(false);
@@ -97,35 +98,35 @@ function App() {
   }
 
   // chức năng menu cho parent
-  const showTrackingBus=()=>{
+  const showTrackingBus = () => {
     setShowTracking(true);
     setShowNotifi(false);
   }
-  const showNotification = ()=>{
+  const showNotification = () => {
     setShowNotifi(true);
     setShowTracking(false);
   }
 
   // chức năng menu cho driver
-  const showViewCalendar = ()=>{
+  const showViewCalendar = () => {
     setShowCalendar(true);
     setShowStudentList(false);
     setShowReport(false);
     setShowWarning(false);
   }
-  const showViewStudentList = ()=>{
+  const showViewStudentList = () => {
     setShowStudentList(true);
     setShowCalendar(false);
     setShowReport(false);
     setShowWarning(false);
   }
-  const showViewReport = ()=>{
+  const showViewReport = () => {
     setShowReport(true);
     setShowStudentList(false);
     setShowCalendar(false);
     setShowWarning(false);
   }
-  const showViewWarning = ()=>{
+  const showViewWarning = () => {
     setShowWarning(true);
     setShowReport(false);
     setShowStudentList(false);
@@ -133,7 +134,7 @@ function App() {
   }
 
   // chức năng menu cho admin
-  const showViewAcc = ()=>{
+  const showViewAcc = () => {
     setShowAccount(true);
     setShowListStudent(false);
     setShowListParent(false);
@@ -146,7 +147,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewListStudent = ()=>{
+  const showViewListStudent = () => {
     setShowListStudent(true);
     setShowListParent(false);
     setShowAccount(false);
@@ -159,7 +160,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewListParent = ()=>{
+  const showViewListParent = () => {
     setShowListParent(true);
     setShowListStudent(false);
     setShowAccount(false);
@@ -172,7 +173,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewListDriver = ()=>{
+  const showViewListDriver = () => {
     setShowListDriver(true);
     setShowAccount(false);
     setShowListStudent(false);
@@ -185,7 +186,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewListBus = ()=>{
+  const showViewListBus = () => {
     setShowListBus(true);
     setShowListDriver(false);
     setShowAccount(false);
@@ -198,7 +199,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewListRoute = ()=>{
+  const showViewListRoute = () => {
     setShowListRoute(true);
     setShowListBus(false);
     setShowListDriver(false);
@@ -211,7 +212,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewStopPoint = ()=>{
+  const showViewStopPoint = () => {
     setShowStopPoint(true);
     setShowListRoute(false);
     setShowListBus(false);
@@ -224,7 +225,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewManageCalendar = ()=>{
+  const showViewManageCalendar = () => {
     setShowManageCalendar(true);
     setShowListRoute(false);
     setShowListBus(false);
@@ -237,7 +238,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewCreateCalendar = ()=>{
+  const showViewCreateCalendar = () => {
     setShowCreateCalendar(true);
     setShowManageCalendar(false);
     setShowListRoute(false);
@@ -250,7 +251,7 @@ function App() {
     setShowManageTrip(false);
     setShowMessage(false);
   }
-  const showViewMessage= ()=>{
+  const showViewMessage = () => {
     setShowMessage(true);
     setShowListDriver(false);
     setShowAccount(false);
@@ -263,7 +264,7 @@ function App() {
     setShowCreateCalendar(false);
     setShowManageTrip(false);
   }
-  const showViewManageTrip= ()=>{
+  const showViewManageTrip = () => {
     setShowManageTrip(true);
     setShowMessage(false);
     setShowListDriver(false);
@@ -278,117 +279,119 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      {/* Thanh navbar */}
-      <Navbar
-        isLoggedIn={isLoggedIn}
-        onLoginClick={() => setShowLogin(true)}
-        loaiTK={loaiTK}
-        onLogoutClick={handleLogout}
-        userInfo={userInfo}
-      />
-
-      <div className="main-layout">
-        {/* Sidebar hiển thị sau khi đăng nhập */}
-        <Sidebar
-          isLoggedIn={isLoggedIn} 
-          loaiTK={loaiTK} 
-
-          onTrackingClick={showTrackingBus} 
-          onNotifiClick={showNotification}
-
-          onViewCalendar={showViewCalendar}
-          onStudentList={showViewStudentList}
-          onReport={showViewReport}
-          onWarning={showViewWarning}
-
-          onManageAcc={showViewAcc}
-          onListStudents={showViewListStudent}
-          onListParents={showViewListParent}
-          onListDrivers={showViewListDriver}
-          onListBuses={showViewListBus}
-          onListRoutes={showViewListRoute}
-          onListStopPoint={showViewStopPoint}
-          onManageCalendar={showViewManageCalendar}
-          onManageTrip={showViewManageTrip}
-          onMessage={showViewMessage}
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+      <div className="app-container">
+        {/* Thanh navbar */}
+        <Navbar
+          isLoggedIn={isLoggedIn}
+          onLoginClick={() => setShowLogin(true)}
+          loaiTK={loaiTK}
+          onLogoutClick={handleLogout}
+          userInfo={userInfo}
         />
 
-        {/* Nội dung chính */}
-        <div className="content"> 
-          {!isLoggedIn && <Home />}
+        <div className="main-layout">
+          {/* Sidebar hiển thị sau khi đăng nhập */}
+          <Sidebar
+            isLoggedIn={isLoggedIn}
+            loaiTK={loaiTK}
 
-        {/* Parent's Menu */}
-          {/* { Popup Tracking} */} 
-          { showTracking && (<ManageBus/>) } 
-          
-          {/* Popup Notification */}
-          { showNotifi && (<PRNotification/>)}
+            onTrackingClick={showTrackingBus}
+            onNotifiClick={showNotification}
 
-        {/* Driver's Menu */}
-          {/* Popup View Calendar */}
-          { showCalendar && (<DRViewCalendar/>)}
+            onViewCalendar={showViewCalendar}
+            onStudentList={showViewStudentList}
+            onReport={showViewReport}
+            onWarning={showViewWarning}
 
-          {/* Popup Student List */}
-          { showStudentList && (<DRStudentList/>)}
+            onManageAcc={showViewAcc}
+            onListStudents={showViewListStudent}
+            onListParents={showViewListParent}
+            onListDrivers={showViewListDriver}
+            onListBuses={showViewListBus}
+            onListRoutes={showViewListRoute}
+            onListStopPoint={showViewStopPoint}
+            onManageCalendar={showViewManageCalendar}
+            onManageTrip={showViewManageTrip}
+            onMessage={showViewMessage}
+          />
 
-          {/* Popup Report */}
-          { showReport && (<DRReport/>)}
+          {/* Nội dung chính */}
+          <div className="content">
+            {!isLoggedIn && <Home />}
 
-          {/* Popup Warning */}
-          { showWarning && (<DRWarning/>)}
+            {/* Parent's Menu */}
+            {/* { Popup Tracking} */}
+            {showTracking && (<ManageBus />)}
 
-        {/* Admin's Menu */}
-          {/* Popup Manage Account */}
-          {showAccount && (<ADManageAcc/>)}
+            {/* Popup Notification */}
+            {showNotifi && (<PRNotification />)}
 
-          {/* Popup List Student */}
-          {showListStudent && (<ADListStudents/>)}
+            {/* Driver's Menu */}
+            {/* Popup View Calendar */}
+            {showCalendar && (<DRViewCalendar />)}
 
-          {/* Popup List Parent */}
-          {showListParent && (<ADListParent/>)}
+            {/* Popup Student List */}
+            {showStudentList && (<DRStudentList />)}
 
-          {/* Popup List Driver */}
-          {showListDriver && (<ADListDrivers/>)}
+            {/* Popup Report */}
+            {showReport && (<DRReport />)}
 
-          {/* Popup List Bus */}
-          {showListBus && (<ADListBus/>)}
+            {/* Popup Warning */}
+            {showWarning && (<DRWarning />)}
 
-          {/* Popup List Route */}
-          {showListRoute && (<ADListRoute/>)}
+            {/* Admin's Menu */}
+            {/* Popup Manage Account */}
+            {showAccount && (<ADManageAcc />)}
 
-          {/* Popup List Stop Point */}
-          {showStopPoint && (<ADListStopPoint/>)}
+            {/* Popup List Student */}
+            {showListStudent && (<ADListStudents />)}
 
-          {/* Popup Manage Calendar */}
-          { showManageCalendar && (<ADManageCalendar
-            onCreateCalendar={showViewCreateCalendar}
-          />)}
-          
-          {/* Popup Create Calendar */}
-          {showCreateCalendar && (<ADCreateCalendar
-            onBackManageCalendar={showViewManageCalendar}
-          />)}
+            {/* Popup List Parent */}
+            {showListParent && (<ADListParent />)}
 
-          {/* Popup Manage Trip */}
-          {showManageTrip && (<ADManageTrip
-            onBackManageCalendar={showViewManageCalendar}
-          />)}
+            {/* Popup List Driver */}
+            {showListDriver && (<ADListDrivers />)}
 
-          {/* Popup Message */}
-          {showMessage && (<ADMessage/>)}
+            {/* Popup List Bus */}
+            {showListBus && (<ADListBus />)}
 
+            {/* Popup List Route */}
+            {showListRoute && (<ADListRoute />)}
+
+            {/* Popup List Stop Point */}
+            {showStopPoint && (<ADListStopPoint />)}
+
+            {/* Popup Manage Calendar */}
+            {showManageCalendar && (<ADManageCalendar
+              onCreateCalendar={showViewCreateCalendar}
+            />)}
+
+            {/* Popup Create Calendar */}
+            {showCreateCalendar && (<ADCreateCalendar
+              onBackManageCalendar={showViewManageCalendar}
+            />)}
+
+            {/* Popup Manage Trip */}
+            {showManageTrip && (<ADManageTrip
+              onBackManageCalendar={showViewManageCalendar}
+            />)}
+
+            {/* Popup Message */}
+            {showMessage && (<ADMessage />)}
+
+          </div>
         </div>
-      </div>
 
-      {/* Popup đăng nhập */}
-      {showLogin && (
-        <LoginPopup
-          onClose={() => setShowLogin(false)}
-          onLogin={handleLogin}
-        />
-      )}
-    </div>
+        {/* Popup đăng nhập */}
+        {showLogin && (
+          <LoginPopup
+            onClose={() => setShowLogin(false)}
+            onLogin={handleLogin}
+          />
+        )}
+      </div>
+    </LoadScript>
   );
 }
 

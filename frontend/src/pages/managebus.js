@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../stylecss/managebus.css";
 import MapComponent from "../components/mapcomponent";
-
+import ReactDOM from "react-dom/client";
 
 function ManageBus() {
   return (
