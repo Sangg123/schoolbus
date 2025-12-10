@@ -8,7 +8,10 @@ import getAllDriver from "../api/getAllDriver";                     // lấy t�
 import getAllStudent from "../api/getAllStudent";                   // lấy tất cả student
 import createSchedule from "../api/createSchedule";                 // tạo 1 schedule mới
 import createStudentSchedule from "../api/createStudentSchedule";   // tạo student schedule mới
-import createTrip from "../api/createTrip";                           // tạo trip mới
+import createTrip from "../api/createTrip";   // tạo trip mới
+import getAllParentStudent from "../api/getAllParentStudent";         
+import getAllStopPoint from "../api/getAllStopPoints";
+import getAllParent from "../api/getAllParent";                
 
 function ADCreateCalendar({ onBackManageCalendar }) {
   const [day, setDay] = useState(1); // backend: 1 = Thứ 2
@@ -86,9 +89,35 @@ function ADCreateCalendar({ onBackManageCalendar }) {
         return;
       }
 
-      // 2) Gán học sinh
+      // 2) Gán học sinh + tạo pickup/dropoff
       for (const studentId of selectedStudents) {
-        await createStudentSchedule(studentId, scheduleId, null, null);
+        // --- Lấy parentId từ parent-student ---
+        const psList = await getAllParentStudent(); // lấy tất cả bản ghi parent-student
+        const parentStudent = psList.find((ps) => Number(ps.studentId) === Number(studentId)); // tìm bản ghi ứng với studentId
+        if (!parentStudent) continue;
+
+        const parentId = parentStudent.parentId;
+
+        // --- Lấy thông tin parent ---
+        const parentList = await getAllParent(); // lấy tất cả parent
+        const parent = parentList.find((p) => Number(p.id) === Number(parentId)); // tìm parent ứng với parentId
+        if (!parent) continue;
+
+        const address = parent.citizenId;  // citizenId = address
+
+        // --- Lấy stop-point theo địa chỉ ---
+        const stopPoints = await getAllStopPoint(); // lấy tất cả stop-point
+        const pickupStop = stopPoints.find((sp) => sp.address === address); // tìm stop-point ứng với địa chỉ của parent
+
+        const pickupStopId = pickupStop ? pickupStop.id : null; 
+
+        // --- dropoff theo routeId ---
+        let dropoffStopId = null;
+        if (routeId === 1) dropoffStopId = 4;
+        if (routeId === 2) dropoffStopId = 8;
+
+        // --- Tạo student-schedule ---
+        await createStudentSchedule(studentId, scheduleId, pickupStopId, dropoffStopId);
       }
 
       // 3)Tạo trip mặc định

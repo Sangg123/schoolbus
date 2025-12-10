@@ -6,30 +6,33 @@ import getAllParent from "../api/getAllParent";
 import updateParent from "../api/updateParent";
 import createParent from "../api/createParent";
 import deleteParent from "../api/deleteParent";
+import getAllStopPoint from "../api/getAllStopPoints";
 
 function ADListParent() {
-  const [parents, setParents] = useState([]); // danh sách hiển thị ghép user + parent record
-  const [editingId, setEditingId] = useState(null); // parent.id hoặc userId nếu chưa có record
+  const [parents, setParents] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+
   const [editForm, setEditForm] = useState({
     citizenId: "",
   });
 
-  // Load parent + user
+  const [stopPoints, setStopPoints] = useState([]); //  Danh sách điểm dừng
+
+  //  Load parent + user
   const loadParents = async () => {
     try {
       const parentData = await getAllParent();
       const userResp = await getalluser();
       const users = userResp.data ?? [];
 
-      // Ghép user role parent với record parent nếu có
       const parentsWithUser = users
-        .filter(u => u.role === "parent")
-        .map(u => {
-          const parent = parentData.find(p => Number(p.userId) === Number(u.id));
+        .filter((u) => u.role === "parent")
+        .map((u) => {
+          const parent = parentData.find((p) => Number(p.userId) === Number(u.id));
           return {
             userId: u.id,
             user: u,
-            id: parent?.id ?? null, // null nếu chưa có parent record
+            id: parent?.id ?? null,
             citizenId: parent?.citizenId ?? "",
             updatedAt: parent?.updatedAt ?? "",
           };
@@ -41,14 +44,26 @@ function ADListParent() {
     }
   };
 
+  //  Load stop-point list
+  const loadStopPoints = async () => {
+    try {
+      const spResp = await getAllStopPoint();
+      setStopPoints(spResp ?? []);
+    } catch (err) {
+      console.error("Load stop point error:", err);
+    }
+  };
+
   useEffect(() => {
     loadParents();
+    loadStopPoints();
   }, []);
 
   const openEdit = (parent) => {
     setEditingId(parent.id ?? parent.userId);
+
     setEditForm({
-      citizenId: parent.citizenId,
+      citizenId: parent.citizenId, // address hiện tại
     });
   };
 
@@ -57,39 +72,34 @@ function ADListParent() {
     setEditForm({ citizenId: "" });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm(prev => ({ ...prev, [name]: value }));
-  };
-
   const handleConfirmEdit = async (parent) => {
-  try {
-    if (!editForm.citizenId) {
-      alert("Vui lòng nhập CCCD!");
-      return;
-    }
+    try {
+      if (!editForm.citizenId) {
+        alert("Vui lòng chọn địa chỉ (stop point)!");
+        return;
+      }
 
-    if (parent.id) {
-      // Parent record đã có → PATCH
-      await updateParent(parent.id, {
-        citizenId: editForm.citizenId,
-      });
-    } else {
-      // Parent record chưa có → POST tạo mới
-      await createParent({
-        userId: parent.userId,
-        citizenId: editForm.citizenId,
-      });
-    }
+      const payload = {
+        citizenId: editForm.citizenId, // address Selected
+      };
 
-    setEditingId(null);
-    setEditForm({ citizenId: "" });
-    await loadParents();
-  } catch (err) {
-    console.error("❌ Lỗi khi lưu dữ liệu:", err);
-    alert("Lỗi khi lưu dữ liệu! Xem console để biết chi tiết.");
-  }
-};
+      if (parent.id) {
+        await updateParent(parent.id, payload);
+      } else {
+        await createParent({
+          userId: parent.userId,
+          ...payload,
+        });
+      }
+
+      setEditingId(null);
+      setEditForm({ citizenId: "" });
+      await loadParents();
+    } catch (err) {
+      console.error("❌ Lỗi khi lưu dữ liệu:", err);
+      alert("Lỗi khi lưu dữ liệu!");
+    }
+  };
 
   const handleDelete = async (id, userId, name) => {
     if (!window.confirm(`Bạn có chắc muốn xoá phụ huynh ${name}?`)) return;
@@ -109,6 +119,7 @@ function ADListParent() {
   return (
     <div className="parent-container">
       <h2 className="parent-title">👨‍👩‍👧 Danh Sách Phụ Huynh</h2>
+
       <table className="parent-table">
         <thead>
           <tr>
@@ -117,11 +128,12 @@ function ADListParent() {
             <th>Email</th>
             <th>Họ tên</th>
             <th>Phone</th>
-            <th>CCCD</th>
+            <th>Địa Chỉ</th>
             <th>Cập Nhật Cuối</th>
             <th>Tùy Chỉnh</th>
           </tr>
         </thead>
+
         <tbody>
           {parents.map((p, index) => (
             <React.Fragment key={p.userId}>
@@ -131,27 +143,60 @@ function ADListParent() {
                 <td>{p.user?.email ?? "-"}</td>
                 <td>{p.user?.fullName ?? "-"}</td>
                 <td>{p.user?.phone ?? "-"}</td>
-                <td>{p.citizenId ?? "-"}</td>
+
+                {/* Hiển thị địa chỉ (citizenId) */}
+                <td>{p.citizenId || "-"}</td>
+
                 <td>{p.updatedAt ?? "-"}</td>
+
                 <td>
-                  <button className="edit-btn" onClick={() => openEdit(p)}>✏️ Sửa</button>
-                  <button className="delete-btn" onClick={() => handleDelete(p.id, p.userId, p.user?.fullName ?? p.userId)}>🗑️ Xoá</button>
+                  <button className="edit-btn" onClick={() => openEdit(p)}>
+                    ✏️ Sửa
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(p.id, p.userId, p.user?.fullName)}
+                  >
+                    🗑️ Xoá
+                  </button>
                 </td>
               </tr>
 
+              {/* Popup sửa */}
               {editingId === (p.id ?? p.userId) && (
                 <tr>
                   <td colSpan={8}>
                     <div className="popup-overlay">
                       <div className="popup">
-                        <h3>Sửa Phụ Huynh</h3>
-                        <input name="email" placeholder="Email" value={p.user?.email ?? ""} readOnly />
-                        <input name="fullName" placeholder="Họ tên" value={p.user?.fullName ?? ""} readOnly />
-                        <input name="phone" placeholder="Phone" value={p.user?.phone ?? ""} readOnly />
-                        <input name="citizenId" placeholder="CCCD" value={editForm.citizenId} onChange={handleInputChange} />
+                        <h3>Sửa Thông Tin Phụ Huynh</h3>
+
+                        <input value={p.user?.email} readOnly />
+                        <input value={p.user?.fullName} readOnly />
+                        <input value={p.user?.phone} readOnly />
+
+                        {/* Select Stop Point */}
+                        <select
+                          name="citizenId"
+                          value={editForm.citizenId}
+                          onChange={(e) =>
+                            setEditForm({ citizenId: e.target.value })
+                          }
+                        >
+                          <option value="">-- Chọn địa chỉ đón/trả --</option>
+                          {stopPoints.map((sp) => (
+                            <option key={sp.id} value={sp.address}>
+                              {sp.name} - {sp.address}
+                            </option>
+                          ))}
+                        </select>
+
                         <div className="popup-actions">
-                          <button className="btn" onClick={() => handleConfirmEdit(p)}>Lưu</button>
-                          <button className="btn" onClick={handleCancel}>Hủy</button>
+                          <button className="btn" onClick={() => handleConfirmEdit(p)}>
+                            Lưu
+                          </button>
+                          <button className="btn" onClick={handleCancel}>
+                            Hủy
+                          </button>
                         </div>
                       </div>
                     </div>
