@@ -90,35 +90,57 @@ function ADCreateCalendar({ onBackManageCalendar }) {
       }
 
       // 2) Gán học sinh + tạo pickup/dropoff
+      const psList = await getAllParentStudent();     // load 1 lần
+      const parentList = await getAllParent();        // load 1 lần
+      const stopPoints = await getAllStopPoint();     // load 1 lần
+
       for (const studentId of selectedStudents) {
-        // --- Lấy parentId từ parent-student ---
-        const psList = await getAllParentStudent(); // lấy tất cả bản ghi parent-student
-        const parentStudent = psList.find((ps) => Number(ps.studentId) === Number(studentId)); // tìm bản ghi ứng với studentId
+        // --- TÌM parentId qua parent-student ---
+        const parentStudent = psList.find(
+          (ps) => Number(ps.studentId) === Number(studentId)
+        );
         if (!parentStudent) continue;
 
         const parentId = parentStudent.parentId;
 
-        // --- Lấy thông tin parent ---
-        const parentList = await getAllParent(); // lấy tất cả parent
-        const parent = parentList.find((p) => Number(p.id) === Number(parentId)); // tìm parent ứng với parentId
+        // --- LẤY parent để có citizenId (địa chỉ của parent) ---
+        const parent = parentList.find(
+          (p) => Number(p.id) === Number(parentId)
+        );
         if (!parent) continue;
 
-        const address = parent.citizenId;  // citizenId = address
+        const address = parent.citizenId; // chính là address của parent
 
-        // --- Lấy stop-point theo địa chỉ ---
-        const stopPoints = await getAllStopPoint(); // lấy tất cả stop-point
-        const pickupStop = stopPoints.find((sp) => sp.address === address); // tìm stop-point ứng với địa chỉ của parent
+        // --- pickupStopId ---
+        let pickupStopId = null;
 
-        const pickupStopId = pickupStop ? pickupStop.id : null; 
-
-        // --- dropoff theo routeId ---
+        // --- dropoffStopId ---
         let dropoffStopId = null;
-        if (routeId === 1) dropoffStopId = 4;
-        if (routeId === 2) dropoffStopId = 8;
+
+        // ============ TUYẾN ĐÓN (1,2) ============
+        if (routeId === 1 || routeId === 2) {
+          // pickup = nhà phụ huynh
+          const pickupStop = stopPoints.find((sp) => sp.address === address);
+          pickupStopId = pickupStop ? pickupStop.id : null;
+
+          // dropoff = Đại học Sài Gòn
+          dropoffStopId = 1;
+        }
+
+        // ============ TUYẾN TRẢ (3,4) ============
+        else if (routeId === 3 || routeId === 4) {
+          // pickup = Đại học Sài Gòn
+          pickupStopId = 1;
+
+          // dropoff = nhà phụ huynh
+          const dropoffStop = stopPoints.find((sp) => sp.address === address);
+          dropoffStopId = dropoffStop ? dropoffStop.id : null;
+        }
 
         // --- Tạo student-schedule ---
         await createStudentSchedule(studentId, scheduleId, pickupStopId, dropoffStopId);
       }
+
 
       // 3)Tạo trip mặc định
       await createTrip({

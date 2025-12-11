@@ -164,7 +164,7 @@ function ADManageCalendar({ onCreateCalendar }) {
             <th>Thời Gian Bắt Đầu</th>
             <th>Xe</th>
             <th>Tài Xế</th>
-            <th>Loại</th>
+            
             <th>Tuyến</th>
             <th>Tuỳ Chỉnh</th>
           </tr>
@@ -185,7 +185,7 @@ function ADManageCalendar({ onCreateCalendar }) {
                 </td>
                 <td>{details.bus?.licensePlate || s.busId}</td>
                 <td>{details.driverName || s.driverId}</td>
-                <td>{s.type || "Đón"}</td>
+                
                 <td>{details.route?.name || s.routeId}</td>
                 <td>
                   <button

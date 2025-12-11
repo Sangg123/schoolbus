@@ -128,8 +128,8 @@ function ADListParent() {
             <th>Email</th>
             <th>Họ tên</th>
             <th>Phone</th>
-            <th>Địa Chỉ</th>
-            <th>Cập Nhật Cuối</th>
+            <th>Địa Chỉ Đón HS</th>
+            
             <th>Tùy Chỉnh</th>
           </tr>
         </thead>
@@ -147,7 +147,7 @@ function ADListParent() {
                 {/* Hiển thị địa chỉ (citizenId) */}
                 <td>{p.citizenId || "-"}</td>
 
-                <td>{p.updatedAt ?? "-"}</td>
+                
 
                 <td>
                   <button className="edit-btn" onClick={() => openEdit(p)}>
