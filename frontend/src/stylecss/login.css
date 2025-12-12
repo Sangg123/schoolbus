@@ -29,13 +29,14 @@
 }
 
 .popup input {
-  width: 300px;
+  width: 100%;
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
   outline: none;
   transition: 0.25s;
+  box-sizing: border-box;   /* 💥 Sửa lỗi ô input dài quá */
 }
 
 .popup input:focus {
