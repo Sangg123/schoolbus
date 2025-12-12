@@ -25,6 +25,7 @@ import ADManageTrip from "./admin/adminManageTrip";
 
 import login from './api/login'
 import { LoadScript } from "@react-google-maps/api";
+import PRTracking from "./parents/parentTracking";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -322,7 +323,7 @@ function App() {
 
             {/* Parent's Menu */}
             {/* { Popup Tracking} */}
-            {showTracking && (<ManageBus />)}
+            {showTracking && (<PRTracking />)}
 
             {/* Popup Notification */}
             {showNotifi && (<PRNotification />)}
